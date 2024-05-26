@@ -4,6 +4,8 @@
 
 ## P4999 烦人的数学作业
 
+[传送门](https://www.luogu.com.cn/problem/P4999)
+
 ```C++
 #include <bits/stdc++.h>
 using namespace std;
@@ -47,6 +49,8 @@ int main() {
 
 
 ## P2602 数字计数
+
+[传送门](https://www.luogu.com.cn/problem/P2602)
 
 ```C++
 #include <bits/stdc++.h>
