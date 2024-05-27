@@ -855,3 +855,88 @@ public:
 };
 ```
 
+## LC2798 满足目标工作时长的员工数目
+[传送门](https://leetcode.cn/problems/count-stepping-numbers-in-range/description/)
+```C++
+class Solution {
+public:
+    const int MOD = 1e9 + 7;
+
+    int solve(string s) {
+        int m = s.size(), f[m][10];
+        memset(f, -1, sizeof f);
+
+        function<int(int, int, bool, bool)> dfs = [&](int i, int pre, bool isLimit, bool isNum) -> int {
+            if (i == m) return isNum;
+            if (!isLimit && isNum && ~f[i][pre])    return f[i][pre];
+
+            int up = isLimit ? s[i] - '0' : 9, ans = 0;
+            if (!isNum) ans = dfs(i + 1, pre, false, false);
+
+            for (int d = 1 - isNum; d <= up; ++ d) {
+                if (pre == -1 || abs(d - pre) == 1)
+                    ans = (ans + dfs(i + 1, d, isLimit && d == up, true)) % MOD;
+            }
+
+            if (!isLimit && isNum)  f[i][pre] = ans;
+
+            return ans;
+        };
+
+        return dfs(0, -1, true, false);
+    }
+
+    bool valid(string s) {
+        for (int i = 1; i < s.size(); ++ i) 
+            if (abs(int(s[i]) - int(s[i - 1])) != 1)
+                return false;
+        return true;
+    }
+
+    int countSteppingNumbers(string low, string high) {
+        return (solve(high) - solve(low) + MOD + valid(low)) % MOD;
+    }
+};
+```
+
+## P4317 花神的数论题
+[传送门](https://www.luogu.com.cn/problem/P4317)
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+using LL = long long;
+const int N = 60, MOD = 10000007;
+LL f[N][N];
+
+LL solve(LL n) {
+    string s;
+    while (n) {
+        s += n % 2 + '0';
+        n /= 2;
+    }
+    reverse(s.begin(), s.end());
+    int m = s.size();
+    memset(f, -1, sizeof f);
+
+    function<LL(int, int, bool)> dfs = [&](int i, int cnt, bool isLimit) -> LL {
+        if (i == m) return max(cnt, 1);
+        if (!isLimit && ~f[i][cnt]) return f[i][cnt]; 
+
+        LL ans = 1, up = isLimit ? s[i] - '0' : 1;
+        for (int d = 0; d <= up; ++ d) {
+            ans = (ans * dfs(i + 1, cnt + (d == 1), isLimit && d == up)) % MOD;
+        }
+
+        if (!isLimit)   f[i][cnt] = ans;
+        return ans;
+    };
+
+    return dfs(0, 0, true);
+}
+
+int main() {
+    LL n;
+    scanf("%lld", &n);
+    printf("%lld\n", solve(n));
+}
+```
