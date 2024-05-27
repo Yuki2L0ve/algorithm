@@ -358,6 +358,7 @@ int main() {
 ## POJ3252 Round Numbers
 
 [传送门](http://poj.org/problem?id=3252)
+[P6218](https://www.luogu.com.cn/problem/P6218)
 
 ```C++
 #include <iostream>
@@ -404,7 +405,6 @@ int main() {
     return 0;
 }
 ```
-
 
 
 ## P4124 手机号码
