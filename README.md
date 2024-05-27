@@ -1,2 +1,2 @@
 # algorithm
-There are many notes for the major algorithmic platforms are stored here.
+本仓库主要记录各大平台算法刷题笔记，其中**专题**目录下整理了各种分类题单，归纳了相同题型。
