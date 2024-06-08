@@ -405,7 +405,7 @@ int main() {
 
 ## P4124 手机号码
 
-[传送门]([https://www.yuque.com/camellia_/zm0aqy/yixdtl344f36kr14](https://www.luogu.com.cn/problem/P4124))
+[传送门](https://www.luogu.com.cn/problem/P4124)
 
 ```C++
 #include <bits/stdc++.h>
