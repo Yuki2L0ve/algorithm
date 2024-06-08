@@ -1,7 +1,3 @@
-这个专题是关于**数位dp**
-
-
-
 ## P4999 烦人的数学作业
 
 [传送门](https://www.luogu.com.cn/problem/P4999)
@@ -71,8 +67,7 @@ LL solve(LL n, int x) {
         if (!isNum) ans = dfs(i + 1, cnt, false, false);
 
         for (int d = 1 - isNum; d <= up; ++ d) {
-            if (d == x) ans += dfs(i + 1, cnt + 1, isLimit && d == up, true);
-            else    ans += dfs(i + 1, cnt, isLimit && d == up, true);
+            ans += dfs(dfs, i + 1, cnt + (d == x), isLimit && d == up, true);
         }
 
         if (!isLimit && isNum)  f[i][cnt] = ans;
