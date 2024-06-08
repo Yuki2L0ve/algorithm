@@ -237,15 +237,16 @@ int solve(int n) {
     int m = s.size();
     memset(f, -1, sizeof f);
     
-    function<int(int, int, bool)> dfs = [&](int i, int sum, bool isLimit) -> int {
-        if (i == m) return sum % MOD == 0;
-        if (!isLimit && ~f[i][sum]) return f[i][sum];
+    function<int(int, int, bool)> dfs = [&](int i, int r, bool isLimit) -> int {
+        if (i == m) return r == 0;
+        if (!isLimit && ~f[i][r]) return f[i][r];
         
         int up = isLimit ? s[i] - '0' : 9, ans = 0;
-        for (int d = 0; d <= up; ++ d) 
-            ans += dfs(i + 1, sum + d, isLimit && d == up);
+        for (int d = 0; d <= up; ++ d) {
+            ans += dfs(i + 1, (r + d) % MOD, isLimit && d == up);
+        }
         
-        if (!isLimit)   f[i][sum] = ans;
+        if (!isLimit) f[i][r] = ans;
         return ans;
     };
     
