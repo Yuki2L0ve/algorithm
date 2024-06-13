@@ -246,3 +246,78 @@ int main() {
     }
 }
 ```
+
+## AcWing4220. 质数路径
+[传送门](https://www.acwing.com/problem/content/4223/)
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 1e4 + 10;
+int dist[N], q[N], primes[N], cnt, T;
+bool st[N];
+
+void init(int n) {
+    for (int i = 2; i <= n; ++ i) {
+        if (!st[i]) 
+            primes[cnt ++ ] = i;
+        for (int j = 0; j < cnt && primes[j] <= n / i; ++ j) {
+            st[i * primes[j]] = true;
+            if (i % primes[j] == 0) 
+                break;
+        }
+    }
+}
+
+int change(int t, int i, int j) {
+    if (i == 0)    {
+        int pre = t / 10;
+        return pre * 10 + j;
+    } else if (i == 1) {   
+        int pre = t / 100, last = t % 10;
+        return pre * 100 + j * 10 + last;
+    } else if (i == 2) {
+        int pre = t / 1000, last = t % 100;
+        return pre * 1000 + j * 100 + last;
+    } else if (i == 3) {
+        if (!j) return 0;
+        return j * 1000 + t % 1000;
+    }
+}
+
+int bfs(int a, int b) {
+    memset(dist, -1, sizeof dist);
+    int hh = 0, tt = 0;
+    q[0] = a;
+    dist[a] = 0;
+    
+    while (hh <= tt) {
+        int u = q[hh ++ ];
+        if (u == b) return dist[u];
+        
+        for (int i = 0; i < 4; ++ i) {
+            for (int j = 0; j <= 9; ++ j) {
+                int v = change(u, i, j);
+                if (!v || v == u || st[v] || dist[v] != -1)
+                    continue;
+                q[++ tt] = v;
+                dist[v] = dist[u] + 1;
+            }
+        }
+    }
+    
+    return -1;
+}
+
+int main() {
+    int T; 
+    scanf("%d", &T);
+    init(N);
+    while (T -- )  {
+        int a, b; 
+        scanf("%d%d", &a, &b);
+        int t = bfs(a, b);
+        if (t == -1) puts("Impossible");
+        else    printf("%d\n", t);
+    }
+}
+```
