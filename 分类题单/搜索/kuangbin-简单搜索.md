@@ -137,3 +137,85 @@ int main() {
     printf("%d\n", bfs());
 }
 ```
+
+## AcWing4218. 翻转
+[传送门](https://www.acwing.com/problem/content/4221/)
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 20, INF = 0x3f3f3f3f;
+int dx[5] = {0, -1, 0, 1, 0}, dy[5] = {0, 0, 1, 0, -1};
+int g[N][N], bak[N][N], path[N][N], ans[N][N], n, m, res = INF;
+
+void turn(int x, int y) {
+    for (int i = 0; i < 5; ++ i) {
+        int a = x + dx[i], b = y + dy[i];
+        if (a < 0 || a >= n || b < 0 || b >= m)
+            continue;
+        g[a][b] ^= 1;
+    }
+    ++ path[x][y];
+}
+
+void solve() {
+    for (int k = 0; k < 1 << m; ++ k) { // 枚举第1行的1<<m种翻转状态
+        memcpy(bak, g, sizeof g);
+        
+        memset(path, 0, sizeof path);
+        int cnt = 0;    // 翻转次数
+        
+        for (int j = 0; j < m; ++ j) {  // 如果第一行中有1则把它翻转
+            if (k >> j & 1) {
+                turn(0, j);
+                ++ cnt;
+            }
+        }
+        
+        // 确定了第一行状态后，则约束了后面所有行的状态
+        for (int i = 0; i < n - 1; ++ i) {
+            for (int j = 0; j < m; ++ j) {
+                if (g[i][j] == 1) {
+                    turn(i + 1, j); // 如果上一行中该列有1，则由下一行中该列来翻转解决
+                    ++ cnt;
+                }
+            }
+        }
+        
+        // 枚举第n行，如果还有1，则说明这种方案是非法的(因为已经没有第n+1行来翻转解决第n行了)
+        bool ok = true;
+        for (int j = 0; j < m; ++ j) {  
+            if (g[n - 1][j] == 1) {
+                ok = false;
+                break;
+            }
+        }
+        
+        if (ok && res > cnt) {
+            res = cnt;  // 翻转次数最少的那种解决方案
+            memcpy(ans, path, sizeof path);
+        }
+        
+        memcpy(g, bak, sizeof bak);
+    }
+}
+
+int main() {
+    scanf("%d%d", &n, &m);
+    for (int i = 0; i < n; ++ i)
+        for (int j = 0; j < m; ++ j)
+            scanf("%d", &g[i][j]);
+    
+    solve();
+    
+    if (res == INF) {
+        puts("IMPOSSIBLE");
+    } else {
+        for (int i = 0; i < n; ++ i) {
+            for (int j = 0; j < m; ++ j)
+                printf("%d ", ans[i][j]);
+            puts("");
+        }
+    }
+
+}
+```
