@@ -219,3 +219,30 @@ int main() {
 
 }
 ```
+
+## AcWing4219. 找倍数
+[传送门](https://www.acwing.com/problem/content/4222/)
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+using ULL = unsigned long long ;
+int n;
+
+int main() {
+    while (~scanf("%d", &n), n) {
+        queue<ULL> q;
+        while (!q.empty())  q.pop();
+        q.push(1);
+        
+        while (q.size()) {
+            ULL x = q.front();  q.pop();
+            if (x % n == 0) {
+                cout << x << endl;
+                break;
+            }
+            q.push(x * 10);
+            q.push(x * 10 + 1);
+        }
+    }
+}
+```
