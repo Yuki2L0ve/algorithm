@@ -98,3 +98,42 @@ int main() {
     }
 }
 ```
+
+## AcWing1100. 抓住那头牛
+[传送门](https://www.acwing.com/problem/content/description/1102/)
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 1e5 + 10;
+int dist[N], q[N], n, k;
+
+int bfs() {
+    memset(dist, -1, sizeof dist);
+    int hh = 0, tt = 0;
+    q[0] = n, dist[n] = 0;
+    
+    while (hh <= tt) {
+        int u = q[hh ++ ];
+        if (u == k) return dist[u];
+        if (u - 1 >= 0 && dist[u - 1] == -1) {
+            dist[u - 1] = dist[u] + 1;
+            q[++ tt] = u - 1;
+        }
+        if (u + 1 < N && dist[u + 1] == -1) {
+            dist[u + 1] = dist[u] + 1;
+            q[++ tt] = u + 1;
+        }
+        if (u * 2 < N && dist[2 * u] == -1) {
+            dist[2 * u] = dist[u] + 1;
+            q[++ tt] = 2 * u;
+        }
+    }
+    
+    return -1;
+}
+
+int main() {
+    scanf("%d%d", &n, &k);
+    printf("%d\n", bfs());
+}
+```
