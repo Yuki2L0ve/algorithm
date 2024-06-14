@@ -424,3 +424,81 @@ int main() {
     bfs();
 }
 ```
+
+## AcWing 4223. 点火游戏
+[传送门](https://www.acwing.com/problem/content/description/4226/)
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+using PII = pair<int, int>;
+#define x first
+#define y second
+const int N = 15, INF = 0x3f3f3f3f;
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+int dist[N][N], n, m, T;
+char g[N][N];
+vector<PII> v;
+
+int bfs(PII one, PII two) {
+    int cnt = 0, ans = 0;   // cnt记录点燃的草地个数
+    queue<PII> q;
+    memset(dist, -1, sizeof dist);
+    q.push(one), ++ cnt;
+    if (one != two) q.push(two), ++ cnt;
+    dist[one.x][one.y] = dist[two.x][two.y] = 0;
+    
+    while(q.size()) {
+        PII t = q.front();  q.pop();
+        for(int i = 0; i < 4; ++ i) {
+            int a = t.x + dx[i], b = t.y + dy[i];
+            if (a < 0 || a >= n || b < 0 || b >= m || g[a][b] == '.' || ~dist[a][b]) continue;
+            dist[a][b] = dist[t.x][t.y] + 1;
+            ans = max(ans, dist[a][b]);
+            ++ cnt;
+            q.push({a, b});
+        }
+    }
+    
+    // 如果点燃了所有草地
+    if (cnt == (int)v.size())   return ans;
+    return INF;
+}
+
+void solve(int id) {
+    cin >> n >> m;
+    v.clear();
+    for (int i = 0; i < n; ++ i) cin >> g[i];
+    for (int i = 0; i < n; ++ i) {
+        for(int j = 0; j < m; ++ j) {
+            if (g[i][j]=='#') v.push_back({i, j}); 
+        }
+    }
+    
+    if (v.size() == 0) {
+        printf("Case %d: %d\n", id, -1);
+        return ;
+    }
+    if (v.size() <= 2) {
+        printf("Case %d: %d\n", id, 0);
+        return ;
+    }
+    
+    int ans = INF;
+    for (int i = 0; i < v.size(); ++ i) 
+        for (int j = i + 1; j < v.size(); ++ j) 
+            ans = min(ans, bfs(v[i], v[j]));
+    
+    if (ans == INF) {
+        printf("Case %d: %d\n", id, -1);
+    } else {
+        printf("Case %d: %d\n", id, ans);
+    }
+}
+
+int main() {
+    cin >> T;
+    for (int i = 1; i <= T; ++ i){
+        solve(i);
+    }
+}
+```
