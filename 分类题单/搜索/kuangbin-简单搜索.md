@@ -502,3 +502,83 @@ int main() {
     }
 }
 ```
+
+## AcWing 4224. 起火迷宫
+[传送门](https://www.acwing.com/problem/content/description/4227/)
+```C++
+#include <bits/stdc++.h>
+#define x first
+#define y second
+using namespace std;
+using PII = pair<int, int>;
+const int N = 1010, INF = 0x3f3f3f3f;
+int dx[] = {-1, 0, 1, 0}, dy[] = {0, 1, 0, -1};
+char g[N][N];
+int d[N][N], dist[N][N], n, m, T;
+vector<PII> fire;
+
+void bfs() {
+    memset(d, 0x3f, sizeof d);  // 注意是初始化为无穷大而不能是-1
+    queue<PII> q;
+    for (auto& [x, y] : fire)
+        q.push({x, y}), d[x][y] = 0;
+
+    while (q.size()) {
+        PII t = q.front();  q.pop();
+        for (int i = 0; i < 4; ++ i) {
+            int a = t.x + dx[i], b = t.y + dy[i];
+            if (a < 1 || a > n || b < 1 || b > m) continue;
+            if (d[a][b] != INF || g[a][b] != '.') continue;
+            d[a][b] = d[t.x][t.y] + 1;
+            q.push({a, b});
+        }
+    }
+
+}
+
+int solve(int sx, int sy) {
+    if (sx == 1 || sx == n || sy == 1 || sy == m) return 1;
+    memset(dist, 0x3f, sizeof dist);    // 注意是初始化为无穷大而不能是-1
+    queue<PII> q;
+    q.push({sx, sy});
+    dist[sx][sy] = 0;
+
+    while (q.size()) {
+        PII t = q.front();  q.pop();
+        for (int i = 0; i < 4; ++ i) {
+            int a = t.x + dx[i], b = t.y + dy[i];
+            if (a < 1 || a > n || b < 1 || b > m) continue;
+            if (dist[a][b] != INF|| g[a][b] != '.' || dist[t.x][t.y] + 1 >= d[a][b]) continue;
+            dist[a][b] = dist[t.x][t.y] + 1;
+            // 之所以+1是因为此时在边界，在走一步即可出迷宫
+            if (a == 1 || a == n || b == 1 || b == m) return dist[a][b] + 1;
+            q.push({a, b});
+        }
+
+    }
+
+    return -1;
+}
+
+int main() {
+    cin >> T;
+    while (T -- ) {
+        cin >> n >> m;
+        for (int i = 1; i <= n; ++ i) cin >> g[i] + 1;
+        fire.clear();
+        
+        int sx, sy;
+        for (int i = 1; i <= n; ++ i)
+            for (int j = 1; j <= m; ++ j)
+                if (g[i][j] == 'F') fire.push_back({i, j});
+                else if (g[i][j] == 'J')    sx = i, sy = j;
+
+        bfs();    
+        
+        int ans = solve(sx, sy);
+        if (ans == -1)  puts("IMPOSSIBLE");
+        else    printf("%d\n", ans);
+
+    }
+}
+```
