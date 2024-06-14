@@ -582,3 +582,56 @@ int main() {
     }
 }
 ```
+
+## AcWing4225. 石油储备
+[传送门](https://www.acwing.com/problem/content/4228/)
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+using PII = pair<int, int>;
+#define x first
+#define y second
+const int N = 110;
+int dx[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+int dy[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+int n, m;
+char g[N][N];
+bool st[N][N];
+PII q[N * N];
+
+int bfs(int sx, int sy) {
+    int hh = 0, tt = 0;
+    q[0] = {sx, sy};
+    st[sx][sy] = true;
+    
+    while (hh <= tt) {
+        PII t = q[hh ++ ];
+        for (int i = 0; i < 8; ++ i) {
+            int a = t.x + dx[i], b = t.y + dy[i];
+            if (a < 0 || a >= n || b < 0 || b >= m || g[a][b] == '*' || st[a][b])
+                continue;
+            q[++ tt] = {a, b};
+            st[a][b] = true;
+        }
+    }
+}
+
+int main() {
+    while (~scanf("%d%d", &n, &m), n || m) {
+        memset(st, 0, sizeof st);
+        for (int i = 0; i < n; ++ i)    scanf("%s", g[i]);
+        
+        int ans = 0;
+        for (int i = 0; i < n; ++ i) {
+            for (int j = 0; j < m; ++ j) {
+                if (g[i][j] == '@' && !st[i][j]) {
+                    bfs(i, j);
+                    ++ ans;
+                }
+            }
+        }
+        
+        printf("%d\n", ans);
+    }
+}
+```
