@@ -368,12 +368,12 @@ int main() {
 ```C++
 #include <bits/stdc++.h>
 using namespace std;
-struct Data{
-    int x, y;
+struct Data {
+    int a, b;
     string s;
 };
 string operations[6] = {"FILL(1)", "FILL(2)", "DROP(1)", "DROP(2)", "POUR(1,2)", "POUR(2,1)"};
-int dist[110][110], a, b, c;
+int dist[110][110], A, B, C;
 
 int bfs() {
     memset(dist, -1, sizeof dist);
@@ -382,46 +382,45 @@ int bfs() {
     dist[0][0] = 0;
     
     while (q.size()) {
-        Data t = q.front();    q.pop();
-        if (t.x == c|| t.y == c) {
-            cout << dist[t.x][t.y] << endl;
-            for (auto& c : t.s)
+        Data t = q.front(); q.pop();
+        if (t.a == C || t.b == C) {
+            printf("%d\n", dist[t.a][t.b]);
+            for (char c : t.s)
                 cout << operations[c - '0'] << endl;
             return 0;
         }
         
         // 从容器 A 到容器 B 的最大可能倒水量，由容器 A 的当前水量 (t.x) 和容器 B 空余容量 (b - t.y) 中的较小值决定。
-        int t1 = min(t.x, b - t.y);
+        int pourAB = min(t.a, B - t.b);
         // 从容器 B 到容器 A 的最大可能倒水量，由容器 B 的当前水量 (t.y) 和容器 A 空余容量 (a - t.x) 中的较小值决定。
-        int t2 = min(a - t.x, t.y);
-        // vx[]和vy[]: 每个操作对应数组中的一个位置，vx[i] 对应于容器 A 的水量变化，vy[i] 对应于容器 B 的水量变化。
+        int pourBA = min(A - t.a, t.b);
+        // dx[]和dy[]: 每个操作对应数组中的一个位置，dx[i] 对应于容器 A 的水量变化，dy[i] 对应于容器 B 的水量变化。
         /**
-         * {a - t.x, 0}：填满容器 A。将容器 A 的水量增加到最大容量 (a)。
-            {0, b - t.y}：填满容器 B。将容器 B 的水量增加到最大容量 (b)。
-            {-t.x, 0}：清空容器 A。将容器 A 的水量减少到 0。
-            {0, -t.y}：清空容器 B。将容器 B 的水量减少到 0。
-            {-t1, t1}：从容器 A 到容器 B 倒水 t1 单位。从容器 A 中减去 t1 单位的水，同时将同等数量的水加到容器 B。
-            {t2, -t2}：从容器 B 到容器 A 倒水 t2 单位。从容器 B 中减去 t2 单位的水，同时将同等数量的水加到容器 A。
+         * {A - t.a, 0}：填满容器 A。将容器 A 的水量增加到最大容量 (a)。
+            {0, B - t.b}：填满容器 B。将容器 B 的水量增加到最大容量 (b)。
+            {-t.a, 0}：清空容器 A。将容器 A 的水量减少到 0。
+            {0, -t.b}：清空容器 B。将容器 B 的水量减少到 0。
+            {-pourAB, pourAB}：从容器 A 到容器 B 倒水 pourAB 单位。从容器 A 中减去 pourAB 单位的水，同时将同等数量的水加到容器 B。
+            {pourBA, -pourBA}：从容器 B 到容器 A 倒水 pourBA 单位。从容器 B 中减去 pourBA 单位的水，同时将同等数量的水加到容器 A。
         **/
-        int vx[] = {a - t.x, 0, -t.x, 0, -t1, t2};
-        int vy[] = {0, b - t.y, 0, -t.y, t1, -t2};
+        int dx[] = {A - t.a, 0, -t.a, 0, -pourAB, pourBA};
+        int dy[] = {0, B - t.b, 0, -t.b, pourAB, -pourBA};
+        
         for (int i = 0; i < 6; ++ i) {
-            int x = t.x + vx[i];
-            int y = t.y + vy[i];
-            if (dist[x][y] == -1) {
-                dist[x][y] = dist[t.x][t.y] + 1;
-                string s = t.s + to_string(i);
-                q.push({x, y, s});
+            int a = t.a + dx[i], b = t.b + dy[i];
+            if (dist[a][b] == -1) {
+                dist[a][b] = dist[t.a][t.b] + 1;
+                q.push({a, b, t.s + to_string(i)});
             }
         }
     }
     
-    cout << "impossible" << endl;
+    puts("impossible");
     return 0;
 }
 
 int main() {
-    cin >> a >> b >> c;
+    scanf("%d%d%d", &A, &B, &C);
     bfs();
 }
 ```
