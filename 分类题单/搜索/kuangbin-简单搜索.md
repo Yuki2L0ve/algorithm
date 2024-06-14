@@ -362,3 +362,57 @@ int main() {
     }
 }
 ```
+
+## AcWing4222. 罐子
+[传送门](https://www.acwing.com/problem/content/4225/)
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+struct Data{
+    int x, y;
+    string s;
+};
+string operations[6]={"FILL(1)", "FILL(2)", "DROP(1)", "DROP(2)", "POUR(1,2)", "POUR(2,1)"};
+int dist[110][110], a, b, c;
+
+int bfs() {
+    memset(dist,-1,sizeof dist);
+    queue<Data> q;
+    q.push({0,0,""});
+    dist[0][0]=0;
+    
+    while (q.size()) {
+        Data t = q.front();    q.pop();
+        if (t.x == c|| t.y == c) {
+            cout << dist[t.x][t.y] << endl;
+            for (auto i : t.s) {
+                cout << operations[i] << endl;
+            }
+            return 0;
+        }
+        
+        int t1 = min(t.x, b - t.y);
+        int t2 = min(a - t.x, t.y);
+        int vx[] = {a - t.x, 0, -t.x, 0, -t1, t2};
+        int vy[] = {0, b - t.y, 0, -t.y, t1, -t2};
+        for (int i = 0; i < 6; ++ i) {
+            int x = t.x + vx[i];
+            int y = t.y + vy[i];
+            if (dist[x][y] == -1) {
+                dist[x][y] = dist[t.x][t.y] + 1;
+                char op = i;
+                string s = t.s + op;
+                q.push({x, y, s});
+            }
+        }
+    }
+    
+    cout << "impossible" << endl;
+    return 0;
+}
+
+int main() {
+    cin >> a >> b >> c;
+    bfs();
+}
+```
