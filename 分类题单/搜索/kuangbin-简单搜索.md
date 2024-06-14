@@ -635,3 +635,62 @@ int main() {
     }
 }
 ```
+
+## AcWing4226. 非常可乐
+[传送门](https://www.acwing.com/problem/content/4229/)
+```C++
+#include <bits/stdc++.h>
+const int N = 110;
+using namespace std;
+
+int vol[3];
+bool st[N][N][N];
+struct Data {
+    int w[3];
+    int step;
+};
+
+int bfs() {
+    memset(st, 0, sizeof st);
+    queue<Data> q;
+    q.push({vol[0], 0, 0, 0});
+    st[vol[0]][0][0] = true;
+    
+    while (q.size()) {
+        Data u = q.front();  q.pop();
+        if (u.w[0] == u.w[2] && u.w[1] == 0)
+            return u.step;
+        for (int i = 0; i < 3; ++ i)
+            for (int j = 0; j < 3; ++ j) {
+                if (i != j) {
+                    Data v = u;
+                    int minx = min(v.w[i], vol[j] - v.w[j]);  // 从i->j倒
+                    v.w[i] -= minx, v.w[j] += minx;
+                    if (!st[v.w[0]][v.w[1]][v.w[2]]) {
+                        ++ v.step;
+                        q.push(v);
+                        st[v.w[0]][v.w[1]][v.w[2]] = true;
+                    }
+                }
+            }
+    }
+    
+    return -1;
+}
+
+int main() {
+    while (~scanf("%d%d%d", &vol[0], &vol[1], &vol[2]), vol[0] || vol[1] || vol[2]) {
+        if (vol[0] & 1) {
+            puts("NO");
+            continue;
+        }
+        
+        if (vol[1] > vol[2])
+            swap(vol[1], vol[2]);
+        
+        int ans = bfs();
+        if (ans == -1)  puts("NO");
+        else printf("%d\n", ans);
+    }
+}
+```
