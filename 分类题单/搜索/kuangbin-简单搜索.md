@@ -372,27 +372,37 @@ struct Data{
     int x, y;
     string s;
 };
-string operations[6]={"FILL(1)", "FILL(2)", "DROP(1)", "DROP(2)", "POUR(1,2)", "POUR(2,1)"};
+string operations[6] = {"FILL(1)", "FILL(2)", "DROP(1)", "DROP(2)", "POUR(1,2)", "POUR(2,1)"};
 int dist[110][110], a, b, c;
 
 int bfs() {
-    memset(dist,-1,sizeof dist);
+    memset(dist, -1, sizeof dist);
     queue<Data> q;
-    q.push({0,0,""});
-    dist[0][0]=0;
+    q.push({0, 0, ""});
+    dist[0][0] = 0;
     
     while (q.size()) {
         Data t = q.front();    q.pop();
         if (t.x == c|| t.y == c) {
             cout << dist[t.x][t.y] << endl;
-            for (auto i : t.s) {
-                cout << operations[i] << endl;
-            }
+            for (auto& c : t.s)
+                cout << operations[c - '0'] << endl;
             return 0;
         }
         
+        // 从容器 A 到容器 B 的最大可能倒水量，由容器 A 的当前水量 (t.x) 和容器 B 空余容量 (b - t.y) 中的较小值决定。
         int t1 = min(t.x, b - t.y);
+        // 从容器 B 到容器 A 的最大可能倒水量，由容器 B 的当前水量 (t.y) 和容器 A 空余容量 (a - t.x) 中的较小值决定。
         int t2 = min(a - t.x, t.y);
+        // vx[]和vy[]: 每个操作对应数组中的一个位置，vx[i] 对应于容器 A 的水量变化，vy[i] 对应于容器 B 的水量变化。
+        /**
+         * {a - t.x, 0}：填满容器 A。将容器 A 的水量增加到最大容量 (a)。
+            {0, b - t.y}：填满容器 B。将容器 B 的水量增加到最大容量 (b)。
+            {-t.x, 0}：清空容器 A。将容器 A 的水量减少到 0。
+            {0, -t.y}：清空容器 B。将容器 B 的水量减少到 0。
+            {-t1, t1}：从容器 A 到容器 B 倒水 t1 单位。从容器 A 中减去 t1 单位的水，同时将同等数量的水加到容器 B。
+            {t2, -t2}：从容器 B 到容器 A 倒水 t2 单位。从容器 B 中减去 t2 单位的水，同时将同等数量的水加到容器 A。
+        **/
         int vx[] = {a - t.x, 0, -t.x, 0, -t1, t2};
         int vy[] = {0, b - t.y, 0, -t.y, t1, -t2};
         for (int i = 0; i < 6; ++ i) {
@@ -400,8 +410,7 @@ int bfs() {
             int y = t.y + vy[i];
             if (dist[x][y] == -1) {
                 dist[x][y] = dist[t.x][t.y] + 1;
-                char op = i;
-                string s = t.s + op;
+                string s = t.s + to_string(i);
                 q.push({x, y, s});
             }
         }
