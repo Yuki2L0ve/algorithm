@@ -321,3 +321,42 @@ int main() {
     }
 }
 ```
+
+## AcWing4221. 洗牌
+[传送门](https://www.acwing.com/problem/content/4224/)
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+string a, b, c;
+int n, T;
+
+int bfs() {
+    unordered_map<string, int> dist;
+    queue<string> q;
+    string s;
+    for (int i = 0; i < n; ++ i)    s += b[i], s += a[i];
+    dist[s] = 1;
+    q.push(s);
+    
+    while (q.size()) {
+        string u = q.front();   q.pop();
+        if (u == c) return dist[u];
+        string v;
+        for (int i = 0; i < n; ++ i)    v += u[i + n], v += u[i];
+        if (!dist.count(v)) {
+            dist[v] = dist[u] + 1;
+            q.push(v);
+        }
+    }
+    
+    return -1;
+}
+
+int main() {
+    scanf("%d", &T);
+    for (int i = 1; i <= T; ++ i) {
+        cin >> n >> a >> b >> c;
+        printf("%d %d\n", i, bfs());
+    }
+}
+```
