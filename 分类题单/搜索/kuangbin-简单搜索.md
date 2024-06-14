@@ -333,9 +333,11 @@ int n, T;
 int bfs() {
     unordered_map<string, int> dist;
     queue<string> q;
-    string s;
+    string s;   // 初始状态
+    // 洗牌操作之后S12的最底下的那一张牌是 S2 的最底下的那一张牌。S12的最顶上的那一张牌，是S1最上面的那一张牌。
+    // 中间的牌交叉放置，记住这个操作叫做洗牌！因此是先加b再加a
     for (int i = 0; i < n; ++ i)    s += b[i], s += a[i];
-    dist[s] = 1;
+    dist[s] = 1;    // 此时已经花费了1次洗牌操作
     q.push(s);
     
     while (q.size()) {
