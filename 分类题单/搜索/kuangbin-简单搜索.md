@@ -685,3 +685,64 @@ int main() {
     }
 }
 ```
+
+## AcWing4227. 找路
+[传送门](https://www.acwing.com/problem/content/4230/)
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+using PII = pair<int, int>;
+#define x first
+#define y second
+const int N = 210, INF = 0x3f3f3f3f;
+int dx[] = {-1, 0, 1, 0}, dy[] = {0, 1, 0, -1};
+int d1[N][N], d2[N][N], dist[N][N], n, m;
+char g[N][N];
+PII q[N * N];
+
+void bfs(int sx, int sy) {
+    memset(dist, 0x3f, sizeof dist);
+    dist[sx][sy] = 0;
+    int hh = 0, tt = 0;
+    q[0] = {sx, sy};
+    
+    while (hh <= tt) {
+        PII t = q[hh ++ ];
+        for (int i = 0; i < 4; ++ i) {
+            int a = t.x + dx[i], b = t.y + dy[i];
+            if (a < 0 || a >= n || b < 0 || b >= m || g[a][b] == '#' || dist[a][b] != INF)  
+                continue;
+            dist[a][b] = dist[t.x][t.y] + 1;
+            q[++ tt] = {a, b};
+        }
+    }
+}
+
+int main() {
+    while (cin >> n >> m) {
+        for (int i = 0; i < n; ++ i)    cin >> g[i];
+        
+        PII a, b;
+        for (int i = 0; i < n; ++ i) {
+            for (int j = 0; j < m; ++ j) {
+                if (g[i][j] == 'Y') a = {i, j};
+                else if (g[i][j] == 'M')    b = {i, j};
+            }
+        }
+        
+        bfs(a.x, a.y);
+        memcpy(d1, dist, sizeof dist);
+        
+        bfs(b.x, b.y);
+        memcpy(d2, dist, sizeof dist);
+        
+        int ans = INF;
+        for (int i = 0; i < n; ++ i)
+            for (int j = 0; j < m; ++ j)
+                if (g[i][j] == '@')
+                    ans = min(ans, d1[i][j] + d2[i][j]);
+        
+        printf("%d\n", 11 * ans);
+    }
+}
+```
