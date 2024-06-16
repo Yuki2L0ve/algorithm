@@ -6,7 +6,7 @@
 using namespace std;
 const int N = 10;
 char g[N][N];
-bool st[N];
+bool col[N];
 int n, k, ans;
 
 void dfs(int i, int cnt) {
@@ -19,10 +19,10 @@ void dfs(int i, int cnt) {
     dfs(i + 1, cnt);
     
     for (int j = 0; j < n; ++ j) {
-        if (g[i][j] == '#' && !st[j]) {
-            st[j] = true;
+        if (g[i][j] == '#' && !col[j]) {
+            col[j] = true;
             dfs(i + 1, cnt + 1);
-            st[j] = false;
+            col[j] = false;
         }
     }
 }
