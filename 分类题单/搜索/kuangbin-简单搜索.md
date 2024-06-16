@@ -641,37 +641,36 @@ int main() {
 ```C++
 #include<bits/stdc++.h>
 using namespace std;
-const int N = 110;
-struct node {
-    int s, n, m, cnt;
+struct Data {
+    int s, n, m;
 };
-bool st[N][N][N];
-int s, n, m;
+int dist[110][110][110];
+int S, N, M;
 
 void bfs() {
-    memset(st, 0, sizeof st);
-    queue<node> q;
-    q.push({s, 0, 0, 0});
-    st[s][0][0] = true;
+    memset(dist, -1, sizeof dist);
+    dist[S][0][0] = 0;
+    queue<Data> q;
+    q.push({S, 0, 0});
 
     while (q.size()) {
         auto t = q.front(); q.pop();
         if (t.s == t.m && !t.n || t.s == t.n && !t.m || t.m == t.n && !t.s) {
-            printf("%d\n", t.cnt);
+            printf("%d\n", dist[t.s][t.n][t.m]);
             return;
         }
         
-        int tsn = min(t.s, n - t.n), tsm = min(t.s, m - t.m), tnm = min(t.n, m - t.m);
-        int tns = min(t.n, s - t.s), tms = min(t.m, s - t.s), tmn = min(t.m, n - t.n);
+        int tsn = min(t.s, N - t.n), tsm = min(t.s, M - t.m), tnm = min(t.n, M - t.m);
+        int tns = min(t.n, S - t.s), tms = min(t.m, S - t.s), tmn = min(t.m, N - t.n);
         int ds[6] = {-tsn, -tsm, tns, 0, tms, 0};
         int dn[6] = {tsn, 0, -tns, -tnm, 0, tmn};
         int dm[6] = {0, tsm, 0, tnm, -tms,-tmn};
         
         for (int i = 0; i < 6; ++ i) {
             int a = t.s + ds[i], b = t.n + dn[i], c = t.m + dm[i];
-            if (st[a][b][c]) continue;
-            q.push({a, b, c, t.cnt + 1});
-            st[a][b][c] = true;
+            if (~dist[a][b][c]) continue;
+            dist[a][b][c] = dist[t.s][t.n][t.m] + 1;
+            q.push({a, b, c});
         }
     }
 
@@ -679,8 +678,8 @@ void bfs() {
 }
 
 int main() {
-    while (~scanf("%d%d%d", &s, &n, &m), s || n || m) {
-        if (s & 1) puts("NO");
+    while (~scanf("%d%d%d", &S, &N, &M), S || N || M) {
+        if (S & 1) puts("NO");
         else bfs();
     }
 }
