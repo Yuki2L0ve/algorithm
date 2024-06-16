@@ -583,6 +583,106 @@ int main() {
 }
 ```
 
+## AcWing1076. 迷宫问题
+[传送门](https://www.acwing.com/problem/content/description/1078/)
+
+```C++
+// 写法1
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 1010;
+#define x first
+#define y second
+using PII = pair<int, int>;
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+PII pre[N][N], q[N * N];
+int g[N][N], n;
+bool st[N][N];
+
+void bfs(int sx, int sy) {
+    int hh = 0, tt = 0;
+    q[0] = {sx, sy};
+    st[sx][sy] = true;
+    
+    while (hh <= tt) {
+        PII t = q[hh ++ ];
+        for (int i = 0; i < 4; ++ i) {
+            int a = t.x + dx[i], b = t.y + dy[i];
+            if (a < 0 || a >= n || b < 0 || b >= n || g[a][b] || st[a][b])  continue;
+            q[ ++ tt] = {a, b};
+            st[a][b] = true;
+            pre[a][b] = t;
+        }
+    }
+}
+
+int main() {
+    scanf("%d", &n);
+    for (int i = 0; i < n; ++ i)
+        for (int j = 0; j < n; ++ j)
+            scanf("%d", &g[i][j]);
+    
+    bfs(n - 1, n - 1);  // 逆向搜索，即从终点搜索到起点
+    
+    PII p(0, 0);        // 起点
+    while (1) {  // 正向打印“逆向搜索得到的路径”  从起点打印到终点
+        printf("%d %d\n", p.x, p.y);
+        if (p.x == n - 1 && p.y == n - 1)   break;
+        p = pre[p.x][p.y];
+    }
+    
+    return 0;
+}
+```
+```C++
+// 写法2
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 1010;
+#define x first
+#define y second
+using PII = pair<int, int>;
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+PII pre[N][N], q[N * N];
+int g[N][N], n;
+bool st[N][N];
+
+void bfs(int sx, int sy) {
+    int hh = 0, tt = 0;
+    q[0] = {sx, sy};
+    st[sx][sy] = true;
+    
+    while (hh <= tt) {
+        PII t = q[hh ++ ];
+        for (int i = 0; i < 4; ++ i) {
+            int a = t.x + dx[i], b = t.y + dy[i];
+            if (a < 0 || a >= n || b < 0 || b >= n || g[a][b] || st[a][b])  continue;
+            q[ ++ tt] = {a, b};
+            st[a][b] = true;
+            pre[a][b] = t;
+        }
+    }
+}
+
+void show(int a, int b) {
+    if (a || b) show(pre[a][b].x, pre[a][b].y);
+    printf("%d %d\n", a, b);
+}
+
+int main() {
+    scanf("%d", &n);
+    for (int i = 0; i < n; ++ i)
+        for (int j = 0; j < n; ++ j)
+            scanf("%d", &g[i][j]);
+    
+    bfs(0, 0);
+    show(n - 1, n - 1);
+    
+    return 0;
+}
+```
+
+
 ## AcWing4225. 石油储备
 [传送门](https://www.acwing.com/problem/content/4228/)
 ```C++
@@ -682,105 +782,6 @@ int main() {
         if (S & 1) puts("NO");
         else bfs();
     }
-}
-```
-
-## AcWing1076. 迷宫问题
-[传送门](https://www.acwing.com/problem/content/description/1078/)
-
-```C++
-// 写法1
-#include <bits/stdc++.h>
-using namespace std;
-const int N = 1010;
-#define x first
-#define y second
-using PII = pair<int, int>;
-int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
-PII pre[N][N], q[N * N];
-int g[N][N], n;
-bool st[N][N];
-
-void bfs(int sx, int sy) {
-    int hh = 0, tt = 0;
-    q[0] = {sx, sy};
-    st[sx][sy] = true;
-    
-    while (hh <= tt) {
-        PII t = q[hh ++ ];
-        for (int i = 0; i < 4; ++ i) {
-            int a = t.x + dx[i], b = t.y + dy[i];
-            if (a < 0 || a >= n || b < 0 || b >= n || g[a][b] || st[a][b])  continue;
-            q[ ++ tt] = {a, b};
-            st[a][b] = true;
-            pre[a][b] = t;
-        }
-    }
-}
-
-int main() {
-    scanf("%d", &n);
-    for (int i = 0; i < n; ++ i)
-        for (int j = 0; j < n; ++ j)
-            scanf("%d", &g[i][j]);
-    
-    bfs(n - 1, n - 1);  // 逆向搜索，即从终点搜索到起点
-    
-    PII p(0, 0);        // 起点
-    while (1) {  // 正向打印“逆向搜索得到的路径”  从起点打印到终点
-        printf("%d %d\n", p.x, p.y);
-        if (p.x == n - 1 && p.y == n - 1)   break;
-        p = pre[p.x][p.y];
-    }
-    
-    return 0;
-}
-```
-```C++
-// 写法2
-#include <bits/stdc++.h>
-using namespace std;
-const int N = 1010;
-#define x first
-#define y second
-using PII = pair<int, int>;
-int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
-PII pre[N][N], q[N * N];
-int g[N][N], n;
-bool st[N][N];
-
-void bfs(int sx, int sy) {
-    int hh = 0, tt = 0;
-    q[0] = {sx, sy};
-    st[sx][sy] = true;
-    
-    while (hh <= tt) {
-        PII t = q[hh ++ ];
-        for (int i = 0; i < 4; ++ i) {
-            int a = t.x + dx[i], b = t.y + dy[i];
-            if (a < 0 || a >= n || b < 0 || b >= n || g[a][b] || st[a][b])  continue;
-            q[ ++ tt] = {a, b};
-            st[a][b] = true;
-            pre[a][b] = t;
-        }
-    }
-}
-
-void show(int a, int b) {
-    if (a || b) show(pre[a][b].x, pre[a][b].y);
-    printf("%d %d\n", a, b);
-}
-
-int main() {
-    scanf("%d", &n);
-    for (int i = 0; i < n; ++ i)
-        for (int j = 0; j < n; ++ j)
-            scanf("%d", &g[i][j]);
-    
-    bfs(0, 0);
-    show(n - 1, n - 1);
-    
-    return 0;
 }
 ```
 
