@@ -34,7 +34,7 @@ public:
 };
 ```
 
-[3176. 求出最长好子序列 I](https://leetcode.cn/problems/find-the-maximum-length-of-a-good-subsequence-i/description/)
+[LC3176. 求出最长好子序列 I](https://leetcode.cn/problems/find-the-maximum-length-of-a-good-subsequence-i/description/)
 ```C++
 class Solution {
 public:
@@ -56,7 +56,7 @@ public:
 };
 ```
 
-[3177. 求出最长好子序列 II](https://leetcode.cn/problems/find-the-maximum-length-of-a-good-subsequence-ii/description/)
+[LC3177. 求出最长好子序列 II](https://leetcode.cn/problems/find-the-maximum-length-of-a-good-subsequence-ii/description/)
 ```C++
 class Solution {
 public:
