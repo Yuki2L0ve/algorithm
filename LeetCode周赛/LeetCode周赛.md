@@ -1,8 +1,7 @@
 记录一些LeetCode周赛题单。
 
 # 第132场双周赛
-## LC3174. 清除数字
-[传送门](https://leetcode.cn/problems/clear-digits/description/)
+[LC3174. 清除数字](https://leetcode.cn/problems/clear-digits/description/)
 ```C++
 class Solution {
 public:
@@ -17,8 +16,7 @@ public:
 };
 ```
 
-## LC3175. 找到连续赢 K 场比赛的第一位玩家
-[传送门](https://leetcode.cn/problems/find-the-first-player-to-win-k-games-in-a-row/description/)
+[LC3175. 找到连续赢 K 场比赛的第一位玩家](https://leetcode.cn/problems/find-the-first-player-to-win-k-games-in-a-row/description/)
 ```C++
 class Solution {
 public:
@@ -37,8 +35,7 @@ public:
 ```
 
 # 第400场周赛
-## LC3168. 候诊室中的最少椅子数
-[传送门](https://leetcode.cn/problems/minimum-number-of-chairs-in-a-waiting-room/description/)
+[LC3168. 候诊室中的最少椅子数](https://leetcode.cn/problems/minimum-number-of-chairs-in-a-waiting-room/description/)
 ```C++
 class Solution {
 public:
@@ -56,8 +53,7 @@ public:
 };
 ```
 
-## LC3169. 无需开会的工作日
-[传送门](https://leetcode.cn/problems/count-days-without-meetings/description/)
+[LC3169. 无需开会的工作日](https://leetcode.cn/problems/count-days-without-meetings/description/)
 ```C++
 class Solution {
 public:
@@ -85,8 +81,7 @@ public:
 };
 ```
 
-## LC3170. 删除星号以后字典序最小的字符串
-[传送门](https://leetcode.cn/problems/lexicographically-minimum-string-after-removing-stars/description/)
+[LC3170. 删除星号以后字典序最小的字符串](https://leetcode.cn/problems/lexicographically-minimum-string-after-removing-stars/description/)
 ```C++
 class Solution {
 public:
@@ -119,8 +114,8 @@ public:
 };
 ```
 
-## LC3171. 找到按位与最接近 K 的子数组
-[传送门](https://leetcode.cn/problems/find-subarray-with-bitwise-and-closest-to-k/description/)
+
+[LC3171. 找到按位与最接近 K 的子数组](https://leetcode.cn/problems/find-subarray-with-bitwise-and-closest-to-k/description/)
 ```C++
 class Solution {
 public:
