@@ -1,5 +1,41 @@
 记录一些LeetCode周赛题单。
 
+# 第132场双周赛
+## LC3174. 清除数字
+[传送门](https://leetcode.cn/problems/clear-digits/description/)
+```C++
+class Solution {
+public:
+    string clearDigits(string s) {
+        string ans;
+        for (auto& c : s) {
+            if (isdigit(c)) ans.pop_back();
+            else    ans += c;
+        }
+        return ans;
+    }
+};
+```
+
+## LC3175. 找到连续赢 K 场比赛的第一位玩家
+[传送门](https://leetcode.cn/problems/find-the-first-player-to-win-k-games-in-a-row/description/)
+```C++
+class Solution {
+public:
+    int findWinningPlayer(vector<int>& skills, int k) {
+        int mx_i = 0, win = 0;
+        for (int i = 1; i < skills.size() && win < k; ++ i) {
+            if (skills[i] > skills[mx_i]) {
+                mx_i = i;
+                win = 0;
+            }
+            ++ win;
+        }
+        return mx_i;
+    }
+};
+```
+
 # 第400场周赛
 ## LC3168. 候诊室中的最少椅子数
 [传送门](https://leetcode.cn/problems/minimum-number-of-chairs-in-a-waiting-room/description/)
