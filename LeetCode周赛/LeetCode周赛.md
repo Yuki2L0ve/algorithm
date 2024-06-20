@@ -34,6 +34,51 @@ public:
 };
 ```
 
+[3176. 求出最长好子序列 I](https://leetcode.cn/problems/find-the-maximum-length-of-a-good-subsequence-i/description/)
+```C++
+class Solution {
+public:
+    int maximumLength(vector<int>& nums, int k) {
+        unordered_map<int, vector<int>> fs;
+        vector<int> mx(k + 1);
+        for (int x : nums) {
+            if (!fs.count(x)) {
+                fs[x] = vector<int>(k + 1);
+            }
+            auto& f = fs[x];
+            for (int j = k; j >= 0; -- j) {
+                f[j] = max(f[j], j > 0 ? mx[j - 1] : 0) + 1;
+                mx[j] = max(mx[j], f[j]);
+            }
+        }
+        return mx[k];
+    }
+};
+```
+
+[3177. 求出最长好子序列 II](https://leetcode.cn/problems/find-the-maximum-length-of-a-good-subsequence-ii/description/)
+```C++
+class Solution {
+public:
+    int maximumLength(vector<int>& nums, int k) {
+        unordered_map<int, vector<int>> fs;
+        vector<int> mx(k + 1);
+        for (int x : nums) {
+            if (!fs.count(x)) {
+                fs[x] = vector<int>(k + 1);
+            }
+            auto& f = fs[x];
+            for (int j = k; j >= 0; -- j) {
+                f[j] = max(f[j], j > 0 ? mx[j - 1] : 0) + 1;
+                mx[j] = max(mx[j], f[j]);
+            }
+        }
+        return mx[k];
+    }
+};
+```
+
+
 # 第400场周赛
 [LC3168. 候诊室中的最少椅子数](https://leetcode.cn/problems/minimum-number-of-chairs-in-a-waiting-room/description/)
 ```C++
