@@ -14,13 +14,13 @@ LL solve(LL n) {
     int m = s.size();
     memset(f, -1, sizeof f);
 
-    function<LL(int, int, int)> dfs = [&](int i, int sum, bool isLimit) -> LL {
+    auto dfs = [&](auto& dfs, int i, int sum, bool isLimit) -> LL {
         if (i == m) return sum;
         if (!isLimit && ~f[i][sum]) return f[i][sum];
 
         LL up = isLimit ? s[i] - '0' : 9, ans = 0;
         for (int d = 0; d <= up; ++ d) {
-            ans = (ans + dfs(i + 1, sum + d, isLimit && d == up)) % MOD;
+            ans = (ans + dfs(dfs, i + 1, sum + d, isLimit && d == up)) % MOD;
         }
 
         if (!isLimit)   f[i][sum] = ans;
@@ -28,7 +28,7 @@ LL solve(LL n) {
         return ans;
     };
 
-    return dfs(0, 0, true);
+    return dfs(dfs, 0, 0, true);
 }
 
 int main() {
