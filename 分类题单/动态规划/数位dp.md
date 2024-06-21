@@ -52,19 +52,19 @@ int main() {
 #include <bits/stdc++.h>
 using namespace std;
 using LL = long long;
-LL f[15][15], l, r;
+LL f[15][15];
 
 LL solve(LL n, int x) {
     string s = to_string(n);
     int m = s.size();
     memset(f, -1, sizeof f);
 
-    function<LL(int, int, bool, bool)> dfs = [&](int i, int cnt, bool isLimit, bool isNum) -> LL {
+    auto dfs = [&](auto& dfs, int i, int cnt, bool isLimit, bool isNum) -> LL {
         if (i == m) return cnt;
         if (!isLimit && isNum && ~f[i][cnt])    return f[i][cnt];
 
         LL up = isLimit ? s[i] - '0' : 9, ans = 0;
-        if (!isNum) ans = dfs(i + 1, cnt, false, false);
+        if (!isNum) ans = dfs(dfs, i + 1, cnt, false, false);
 
         for (int d = 1 - isNum; d <= up; ++ d) {
             ans += dfs(dfs, i + 1, cnt + (d == x), isLimit && d == up, true);
@@ -74,10 +74,11 @@ LL solve(LL n, int x) {
         return ans;
     };
 
-    return dfs(0, 0, true, false);
+    return dfs(dfs, 0, 0, true, false);
 }
 
 int main() {
+    LL l, r;
     scanf("%lld%lld", &l, &r);
     if (l > r)  swap(l, r);
     for (int i = 0; i <= 9; ++ i) {
