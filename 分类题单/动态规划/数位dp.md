@@ -696,16 +696,16 @@ public:
         int m = s.size(), f[m][1 << 10];
         memset(f, -1, sizeof f);
 
-        function<int(int, int, bool, bool)> dfs = [&](int i, int mask, bool isLimit, bool isNum) -> int {
+        auto dfs = [&](auto& dfs, int i, int mask, bool isLimit, bool isNum) -> int {
             if (i == m) return isNum;
             if (!isLimit && isNum && ~f[i][mask])   return f[i][mask];
 
             int up = isLimit ? s[i] - '0' : 9, ans = 0;
-            if (!isNum) ans = dfs(i + 1, mask, false, false);
+            if (!isNum) ans = dfs(dfs, i + 1, mask, false, false);
 
             for (int d = 1 - isNum; d <= up; ++ d) {
                 if (mask >> d & 1)  continue;
-                ans += dfs(i + 1, mask | (1 << d), isLimit && d == up, true);
+                ans += dfs(dfs, i + 1, mask | (1 << d), isLimit && d == up, true);
             }
 
             if (!isLimit && isNum)  f[i][mask] = ans;
@@ -713,11 +713,11 @@ public:
             return ans;
         };
 
-        return dfs(0, 0, true, false);
+        return dfs(dfs, 0, 0, true, false);
     }
 
     int numDupDigitsAtMostN(int n) {
-        return n - solve(n);	
+        return n - solve(n);
     }
 };
 ```
