@@ -777,14 +777,14 @@ public:
         int m = s.size(), f[m][min(9 * m, y) + 1];
         memset(f, -1, sizeof f);
 
-        function<int(int, int ,bool isLimit)> dfs = [&](int i, int sum, bool isLimit) -> int {
+        auto dfs = [&](auto& dfs, int i, int sum, bool isLimit) -> int {
             if (sum > y)    return 0;
             if (i == m) return x <= sum;
             if (!isLimit && ~f[i][sum]) return f[i][sum];
 
             int up = isLimit ? s[i] - '0' : 9, ans = 0;
             for (int d = 0; d <= up; ++ d) {
-                ans = (ans + dfs(i + 1, sum + d, isLimit && d == up)) % MOD;
+                ans = (ans + dfs(dfs, i + 1, sum + d, isLimit && d == up)) % MOD;
             }
 
             if (!isLimit)   f[i][sum] = ans;
@@ -792,15 +792,14 @@ public:
             return ans;
         };
 
-        return dfs(0, 0, true);
+        return dfs(dfs, 0, 0, true);
     }
 
     int count(string num1, string num2, int min_sum, int max_sum) {
         x = min_sum, y = max_sum;
-        int ans = solve(num2) - solve(num1) + MOD;  // 避免负数
-        int sum = 0;
+        int sum = 0, ans = solve(num2) - solve(num1) + MOD;  // 避免负数
         for (char c : num1) sum += c - '0';
-        ans += x <= sum && sum <= y;        // x=num1 是合法的，补回来
+        ans += sum >= x && sum <= y;        // x=num1 是合法的，补回来
         return ans % MOD;
     }
 };
