@@ -736,15 +736,15 @@ public:
         int m = s.size(), f[m][m];
         memset(f, -1, sizeof f);
 
-        function<int(int, int, bool, bool)> dfs = [&](int i, int cnt, bool isLimit, bool isNum) -> int {
+        auto dfs = [&](auto& dfs, int i, int cnt, bool isLimit, bool isNum) -> int {
             if (i == m) return cnt;
             if (!isLimit && isNum && ~f[i][cnt])    return f[i][cnt];
 
             int up = isLimit ? s[i] - '0' : 9, ans = 0;
-            if (!isNum) ans = dfs(i + 1, cnt, false, false);
+            if (!isNum) ans = dfs(dfs, i + 1, cnt, false, false);
 
             for (int d = 1 - isNum; d <= up; ++ d) {
-                ans += dfs(i + 1, cnt + (d == x), isLimit && d == up, true);
+                ans += dfs(dfs, i + 1, cnt + (d == x), isLimit && d == up, true);
             }
 
             if (!isLimit && isNum)  f[i][cnt] = ans;
@@ -752,7 +752,7 @@ public:
             return ans;
         };
 
-        return dfs(0, 0, true, false);
+        return dfs(dfs, 0, 0, true, false);
     }
 
     int digitsCount(int d, int low, int high) {
