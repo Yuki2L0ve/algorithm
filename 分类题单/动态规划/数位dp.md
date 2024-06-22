@@ -875,6 +875,7 @@ LL solve(LL n) {
     memset(f, -1, sizeof f);
 
     auto dfs = [&](auto& dfs, int i, int cnt, bool isLimit) -> LL {
+        // 之所以max(cnt, 1)是为了避免ans * 0
         if (i == m) return max(cnt, 1);
         if (!isLimit && ~f[i][cnt]) return f[i][cnt];
 
