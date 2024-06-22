@@ -613,14 +613,14 @@ public:
 ```C++
 class Solution {
 public:
-    int diffs[10] = {0, 0, 1, -1, -1, 1, 1, -1, 0, 1};	// 0~9
+    int diffs[10] = {0, 0, 1, -1, -1, 1, 1, -1, 0, 1};
 
     int solve(int n) {
         string s = to_string(n);
         int m = s.size(), f[m][2];
         memset(f, -1, sizeof f);
 
-        function<int(int, bool, bool)> dfs = [&](int i, bool hasDiff, bool isLimit) -> int {
+        auto dfs = [&](auto& dfs, int i, bool hasDiff, bool isLimit) -> int {
             // 只有包含 2/5/6/9 才算一个好数
             if (i == m) return hasDiff;
             if (!isLimit && ~f[i][hasDiff]) return f[i][hasDiff];
@@ -628,14 +628,14 @@ public:
             int up = isLimit ? s[i] - '0' : 9, ans = 0;
             for (int d = 0; d <= up; ++ d) 
                 if (~diffs[d])  // d 不是 3/4/7
-                    ans += dfs(i + 1, hasDiff || diffs[d], isLimit && d == up);
+                    ans += dfs(dfs, i + 1, hasDiff || diffs[d], isLimit && d == up);
 
             if (!isLimit)   f[i][hasDiff] = ans;
 
             return ans;
         };
 
-        return dfs(0, false, true);
+        return dfs(dfs, 0, false, true);
     }
 
     int rotatedDigits(int n) {
