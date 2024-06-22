@@ -897,3 +897,49 @@ int main() {
     printf("%lld\n", solve(n));
 }
 ```
+
+## LC3007. 价值和小于等于 K 的最大数字
+[传送门](https://leetcode.cn/problems/maximum-number-that-sum-of-the-prices-is-less-than-or-equal-to-k/description/)
+```C++
+class Solution {  
+public:
+    using LL = long long;
+
+    LL solve(LL n, int x) {
+        string s;
+        while (n) {
+            s.push_back(n % 2 + '0');
+            n /= 2;
+        }
+        reverse(s.begin(), s.end());
+        int m = s.size();
+        LL f[m][m];
+        memset(f, -1, sizeof f);
+
+        auto dfs = [&](auto& dfs, int i, int cnt, bool isLimit) -> LL {
+            if (i == m) return cnt;
+            if (!isLimit && ~f[i][cnt]) return f[i][cnt];
+
+            LL ans = 0, up = isLimit ? s[i] - '0' : 1;
+            for (int d = 0; d <= up; ++ d) {
+                ans += dfs(dfs, i + 1, cnt + (d == 1 && (m - i) % x == 0), isLimit && d == up);
+            }
+
+            if (!isLimit) f[i][cnt] = ans;
+            return ans;
+        };
+
+        return dfs(dfs, 0, 0, true);
+    }
+
+    long long findMaximumNumber(long long k, int x) {
+        LL l = 1, r = 1e15 + 1;
+        while (l < r) {
+            LL mid = l + r + 1 >> 1;
+            if (solve(mid, x) <= k)    l = mid;
+            else    r = mid - 1;
+        }
+        return l;
+    }
+};
+```
