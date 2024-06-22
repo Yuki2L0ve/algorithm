@@ -151,22 +151,21 @@ int solve(int n) {
     int m = s.size();
     memset(f, -1, sizeof f);
     
-    function<int(int, int, bool)> dfs = [&](int i, int pre, bool isLimit) -> int {
+    auto dfs = [&](auto& dfs, int i, int pre, bool isLimit) -> int {
         if (i == m) return 1;
         if (!isLimit && ~f[i][pre]) return f[i][pre];
         
         int up = isLimit ? s[i] - '0' : 9, ans = 0;
         for (int d = 0; d <= up; ++ d) {
             if (d < pre)    continue;
-            ans += dfs(i + 1, d, isLimit && d == up);
+            ans += dfs(dfs, i + 1, d, isLimit && d == up);
         }
         
         if (!isLimit)   f[i][pre] = ans;
-        
         return ans;
     };
     
-    return dfs(0, 0, true);
+    return dfs(dfs, 0, 0, true);
 }
 
 int main() {
