@@ -434,7 +434,7 @@ LL solve(LL n) {
     // 问:如何避开第一位上的前导0？
     // 答:枚举1到第一位上的数字，从下一位开始搜索
     LL ans = 0;
-    for (int i = 1; i <= (s[0] - '0'); i ++ )
+    for (int i = 1; i <= (s[0] - '0'); ++ i)
         ans += dfs(dfs, 1, i, 0, false, i == 4, i == 8, i == (s[0] - '0'));
 
     return ans;
@@ -461,21 +461,20 @@ public:
         int m = s.size(), f[m][m];
         memset(f, -1, sizeof f);
 
-        function<int(int, int, bool)> dfs = [&](int i, int cnt, bool isLimit) -> int {
+        auto dfs = [&](auto& dfs, int i, int cnt, bool isLimit) -> int {
             if (i == m) return cnt;
             if (!isLimit && ~f[i][cnt]) return f[i][cnt];
 
-            int up = isLimit ? s[i] - '0' : 9, ans = 0;
+            int ans = 0, up = isLimit ? s[i] - '0' : 9;
             for (int d = 0; d <= up; ++ d) {
-                ans += dfs(i + 1, cnt + (d == 1), isLimit && d == up);
+                ans += dfs(dfs, i + 1, cnt + (d == 1), isLimit && d == up);
             }
 
             if (!isLimit)   f[i][cnt] = ans;
-
             return ans;
         };
 
-        return dfs(0, 0, true);
+        return dfs(dfs, 0, 0, true);
     }
 
     int countDigitOne(int n) {
@@ -498,16 +497,16 @@ public:
         int m = s.size(), f[m][1 << 10];
         memset(f, -1, sizeof f);
 
-        function<int(int, int, bool, bool)> dfs = [&](int i, int mask, bool isLimit, bool isNum) -> int {
+        auto dfs = [&](auto& dfs, int i, int mask, bool isLimit, bool isNum) -> int {
             if (i == m) return isNum;
             if (!isLimit && isNum && ~f[i][mask])   return f[i][mask];
 
             int up = isLimit ? s[i] - '0' : 9, ans = 0;
-            if (!isNum) ans = dfs(i + 1, mask, false, false);
+            if (!isNum) ans = dfs(dfs, i + 1, mask, false, false);
 
             for (int d = 1 - isNum; d <= up; ++ d) {
                 if (mask >> d & 1)  continue;
-                ans += dfs(i + 1, mask | (1 << d), isLimit && d == up, true);
+                ans += dfs(dfs, i + 1, mask | (1 << d), isLimit && d == up, true);
             }
 
             if (!isLimit && isNum)  f[i][mask] = ans;
@@ -515,7 +514,7 @@ public:
             return ans;
         };
 
-        return dfs(0, 0, true, false) + 1;  // 0符合要求  因此要多加一
+        return dfs(dfs, 0, 0, true, false) + 1;  // 0符合要求  因此要多加一
     }
 
     int countNumbersWithUniqueDigits(int n) {
