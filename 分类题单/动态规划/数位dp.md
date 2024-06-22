@@ -815,20 +815,21 @@ public:
 class Solution {
 public:
     const int MOD = 1e9 + 7;
+
     int solve(string s) {
         int m = s.size(), f[m][10];
         memset(f, -1, sizeof f);
 
-        function<int(int, int, bool, bool)> dfs = [&](int i, int pre, bool isLimit, bool isNum) -> int {
+        auto dfs = [&](auto& dfs, int i, int pre, bool isLimit, bool isNum) -> int {
             if (i == m) return isNum;
             if (!isLimit && isNum && ~f[i][pre])    return f[i][pre];
 
             int up = isLimit ? s[i] - '0' : 9, ans = 0;
-            if (!isNum) ans = dfs(i + 1, pre, false, false);
+            if (!isNum) ans = dfs(dfs, i + 1, pre, false, false);
 
             for (int d = 1 - isNum; d <= up; ++ d) {
                 if (pre == -1 || abs(d - pre) == 1)
-                    ans = (ans + dfs(i + 1, d, isLimit && d == up, true)) % MOD;
+                    ans = (ans + dfs(dfs, i + 1, d, isLimit && d == up, true)) % MOD;
             }
 
             if (!isLimit && isNum)  f[i][pre] = ans;
@@ -836,7 +837,7 @@ public:
             return ans;
         };
 
-        return dfs(0, -1, true, false);
+        return dfs(dfs, 0, -1, true, false);
     }
 
     bool valid(string s) {
