@@ -874,20 +874,20 @@ LL solve(LL n) {
     int m = s.size();
     memset(f, -1, sizeof f);
 
-    function<LL(int, int, bool)> dfs = [&](int i, int cnt, bool isLimit) -> LL {
+    auto dfs = [&](auto& dfs, int i, int cnt, bool isLimit) -> LL {
         if (i == m) return max(cnt, 1);
-        if (!isLimit && ~f[i][cnt]) return f[i][cnt]; 
+        if (!isLimit && ~f[i][cnt]) return f[i][cnt];
 
         LL ans = 1, up = isLimit ? s[i] - '0' : 1;
         for (int d = 0; d <= up; ++ d) {
-            ans = (ans * dfs(i + 1, cnt + (d == 1), isLimit && d == up)) % MOD;
+            ans = (ans * dfs(dfs, i + 1, cnt + (d == 1), isLimit && d == up)) % MOD;
         }
 
         if (!isLimit)   f[i][cnt] = ans;
         return ans;
     };
 
-    return dfs(0, 0, true);
+    return dfs(dfs, 0, 0, true);
 }
 
 int main() {
