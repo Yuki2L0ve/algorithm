@@ -193,24 +193,23 @@ int solve(int n) {
     int m = s.size();
     memset(f, -1, sizeof f);
     
-    function<int(int, int, bool, bool)> dfs = [&](int i, int pre, bool isLimit, bool isNum) -> int {
+    auto dfs = [&](auto& dfs, int i, int pre, bool isLimit, bool isNum) -> int {
         if (i == m) return isNum;
         if (!isLimit && isNum && ~f[i][pre])    return f[i][pre];
         
         int up = isLimit ? s[i] - '0' : 9, ans = 0;
-        if (!isNum) ans = dfs(i + 1, pre, false, false);
+        if (!isNum) ans = dfs(dfs, i + 1, pre, false, false);
         
         for (int d = 1 - isNum; d <= up; ++ d) {
-            if (abs(d - pre) >= 2)
-                ans += dfs(i + 1, d, isLimit && d == up, true);
+            if (pre == -2 || abs(d - pre) >= 2)   // 貌似不用写 pre == -2 也可以过
+                ans += dfs(dfs, i + 1, d, isLimit && d == up, true);
         }
         
         if (!isLimit && isNum)  f[i][pre] = ans;
-        
         return ans;
     };
     
-    return dfs(0, -2, true, false);
+    return dfs(dfs, 0, -2, true, false);
 }
 
 int main() {
