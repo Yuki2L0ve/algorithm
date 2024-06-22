@@ -318,7 +318,7 @@ LL solve(LL n) {
     int m = s.size();
     memset(f, -1, sizeof f);
 
-    function<LL(int, int, bool)> dfs = [&](int i, int pre, bool isLimit) -> LL {
+    auto dfs = [&](auto& dfs, int i, int pre, bool isLimit) -> LL {
         if (i == m) return 1;
         if (!isLimit && ~f[i][pre]) return f[i][pre];
 
@@ -326,14 +326,14 @@ LL solve(LL n) {
         LL ans = 0;
         for (int d = 0; d <= up; ++ d) {
             if (pre == 4 && d == 9) continue;
-            ans += dfs(i + 1, d, isLimit && d == up);
+            ans += dfs(dfs, i + 1, d, isLimit && d == up);
         }
 
         if (!isLimit)   f[i][pre] = ans;
         return ans;
     };
 
-    return dfs(0, 0, true) - 1;
+    return dfs(dfs, 0, 0, true) - 1;
 }
 
 int main() {
