@@ -580,14 +580,14 @@ public:
         int m = s.size(), f[m][2];
         memset(f, -1, sizeof f);
 
-        function<int(int, bool, bool)> dfs = [&](int i, bool pre, bool isLimit) -> int {
+        auto dfs = [&](auto& dfs, int i, bool pre, bool isLimit) -> int {
             if (i == m) return 1;
             if (!isLimit && ~f[i][pre]) return f[i][pre];
 
             int up = isLimit ? s[i] - '0' : 1, ans = 0;
             for (int d = 0; d <= up; ++ d) {
                 if (pre && d == 1)  continue;
-                ans += dfs(i + 1, d == 1, isLimit && d == up);
+                ans += dfs(dfs, i + 1, d == 1, isLimit && d == up);
             }
 
             if (!isLimit)   f[i][pre] = ans;
@@ -595,7 +595,7 @@ public:
             return ans;
         };
 
-        return dfs(0, false, true);
+        return dfs(dfs, 0, false, true);
     }
 
     int findIntegers(int n) {
