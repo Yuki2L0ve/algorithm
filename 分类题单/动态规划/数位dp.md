@@ -943,3 +943,41 @@ public:
     }
 };
 ```
+
+## LC2827. 范围中美丽整数的数目
+[传送门](https://leetcode.cn/problems/number-of-beautiful-integers-in-the-range/description/)
+```C++
+class Solution {
+public:
+    int k;
+
+    int solve(int n) {
+        string s = to_string(n);
+        int m = s.size(), f[m][k + 1][20][20];
+        memset(f, -1, sizeof f);
+
+        auto dfs = [&](auto& dfs, int i, int r, int odd, int even, bool isLimit, bool isNum) -> int {
+            if (i == m) return r == 0 && (even == odd);
+            if (!isLimit && isNum && ~f[i][r][odd][even])   return f[i][r][odd][even];
+
+            int ans = 0, up = isLimit ? s[i] - '0' : 9;
+            if (!isNum) ans = dfs(dfs, i + 1, r, odd, even, false, false);
+
+            for (int d = 1 - isNum; d <= up; ++ d) {
+                if (d & 1)  ans += dfs(dfs, i + 1, (r * 10 + d) % k, odd + 1, even, isLimit && d == up, true);
+                else    ans += dfs(dfs, i + 1, (r * 10 + d) % k, odd, even + 1, isLimit && d == up, true);
+            }
+
+            if (!isLimit && isNum)  f[i][r][odd][even] = ans;
+            return ans;
+        };
+
+        return dfs(dfs, 0, 0, 0, 0, true, false);
+    }
+
+    int numberOfBeautifulIntegers(int low, int high, int k) {
+        this->k = k;
+        return solve(high) - solve(low - 1);
+    }
+};
+```
