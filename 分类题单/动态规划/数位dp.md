@@ -658,24 +658,26 @@ public:
         int m = s.size(), f[m];
         memset(f, -1, sizeof f);
 
-        function<int(int, bool, bool)> dfs = [&](int i, bool isLimit, bool isNum) -> int {
-            if (i == m) return isNum;   
+        auto dfs = [&](auto& dfs, int i, bool isLimit, bool isNum) -> int {
+            if (i == m) return isNum;
             if (!isLimit && isNum && ~f[i]) return f[i];
 
             int ans = 0;
-            if (!isNum) ans = dfs(i + 1, false, false);
-            char up = isLimit ? s[i] : '9'; 
+            if (!isNum) ans = dfs(dfs, i + 1, false, false);
+
+            char up = isLimit ? s[i] : '9';
             for (auto &d : digits) {
-                if (d[0] > up)  break;
-                ans += dfs(i + 1, isLimit && d[0] == up, true);
+                // d 超过上限，由于 digits 是有序的，后面的 d 都会超过上限，故退出循环
+                if (d[0] > up)  continue;
+                ans += dfs(dfs, i + 1, isLimit && d[0] == up, true);
             }
 
             if (!isLimit && isNum)  f[i] = ans;
-            
+
             return ans;
         };
 
-        return dfs(0, true, false);
+        return dfs(dfs, 0, true, false);
     }
 };
 ```
