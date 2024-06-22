@@ -418,16 +418,16 @@ LL solve(LL n) {
     if (m != 11)    return 0;
     memset(f, -1, sizeof f);
 
-    function<LL(int, int, int, bool, bool, bool, bool)> dfs = [&](int i, int a, int b, bool state, bool four, bool eight, bool isLimit) -> LL {
+    auto dfs = [&](auto& dfs, int i, int pre, int ppre, bool state, bool four, bool eight, bool isLimit) -> LL {
         if (i == m) return state && !(four && eight) ? 1 : 0;
-        if (!isLimit && ~f[i][a][b][state][four][eight])    return f[i][a][b][state][four][eight];
+        if (!isLimit && ~f[i][pre][ppre][state][four][eight])    return f[i][pre][ppre][state][four][eight];
 
         int up = isLimit ? s[i] - '0' : 9;
         LL ans = 0;
         for (int d = 0; d <= up; ++ d)
-            ans += dfs(i + 1, d, a, state || (d == a && d == b), four || (d == 4), eight || (d == 8), isLimit && d == up);
+            ans += dfs(dfs, i + 1, d, pre, state || (d == pre && d == ppre), four || (d == 4), eight || (d == 8), isLimit && d == up);
 
-        if (!isLimit)   f[i][a][b][state][four][eight] = ans;
+        if (!isLimit)   f[i][pre][ppre][state][four][eight] = ans;
         return ans;
     };
 
@@ -435,7 +435,7 @@ LL solve(LL n) {
     // 答:枚举1到第一位上的数字，从下一位开始搜索
     LL ans = 0;
     for (int i = 1; i <= (s[0] - '0'); i ++ )
-        ans += dfs(1, i, 0, false, i == 4, i == 8, i == (s[0] - '0'));
+        ans += dfs(dfs, 1, i, 0, false, i == 4, i == 8, i == (s[0] - '0'));
 
     return ans;
 }
