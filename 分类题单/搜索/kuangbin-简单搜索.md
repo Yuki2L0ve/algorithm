@@ -247,6 +247,33 @@ int main() {
 }
 ```
 
+## LC1215. 步进数
+[传送门](https://leetcode.cn/problems/stepping-numbers/description/?envType=problem-list-v2&envId=IRYvHnIJ)
+```C++
+class Solution {
+public:
+    using LL = long long ;
+    vector<int> countSteppingNumbers(int low, int high) {
+        vector<int> ans;
+        if (!low)   ans.push_back(0);
+        queue<LL> q;
+        for (LL i = 1; i <= 9; ++ i)   q.push(i);
+
+        while (q.size()) {
+            auto t = q.front(); q.pop();
+            if (t > high)   return ans;
+            if (low <= t && t <= high)  ans.push_back(t);
+
+            int d = t % 10;
+            if (d > 0)  q.push(t * 10 + d - 1);
+            if (d < 9) q.push(t * 10 + d + 1);
+        }
+
+        return ans;
+    }
+};
+```
+
 ## AcWing4220. 质数路径
 [传送门](https://www.acwing.com/problem/content/4223/)
 ```C++
