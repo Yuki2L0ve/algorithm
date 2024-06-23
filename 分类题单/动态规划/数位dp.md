@@ -1032,3 +1032,46 @@ public:
     }
 };
 ```
+
+## LC1742. 盒子中小球的最大数量
+[传送门](https://leetcode.cn/problems/maximum-number-of-balls-in-a-box/description/?envType=problem-list-v2&envId=IRYvHnIJ)
+```C++
+class Solution {
+public:
+    // 统计区间内满足各位数字之和等于i的数字个数
+    int solve(string low, string high, int target) {
+        int n = high.size(), m = low.size(), f[n][50];
+        low = string(n - m, '0') + low; // 补齐长度
+        memset(f, -1, sizeof f);
+
+        auto dfs = [&](auto& dfs, int i, int sum, bool limit_low, bool limit_high) -> int {
+            if (i == n)    return sum == target;    // 出口
+            if (!limit_low && !limit_high && ~f[i][sum])  return f[i][sum];
+
+            // 定上下限
+            int hi = limit_high ? high[i] - '0' : 9;
+            int lo = limit_low ? low[i] - '0' : 0;
+
+            int ans = 0;
+            for (int d = lo; d <= hi; ++ d) {
+                ans += dfs(dfs, i + 1, sum + d, limit_low && d == lo, limit_high && d == hi);
+            }
+
+            if(!limit_low && !limit_high)   f[i][sum] = ans;
+            return ans;
+        };
+
+        return dfs(dfs, 0, 0, true, true);
+    }
+
+    int countBalls(int lowLimit, int highLimit) {
+        int ans = 0;
+        string high = to_string(highLimit), low = to_string(lowLimit);
+        // 最多是1e5, 有5个bit, 每个bit最大是9, 那么最大和就是45
+        for (int i = 1; i <= 45; ++ i) {
+            ans = max(ans, solve(low, high, i));
+        }
+        return ans;
+    }
+};
+```
