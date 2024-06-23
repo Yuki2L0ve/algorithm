@@ -981,3 +981,54 @@ public:
     }
 };
 ```
+
+## LC2999. 统计强大整数的数目
+[传送门](https://leetcode.cn/problems/count-the-number-of-powerful-integers/description/?envType=problem-list-v2&envId=IRYvHnIJ)
+```C++
+class Solution {
+public:
+    using LL = long long ;
+    int limit;
+    string sub;
+
+    LL solve(LL x) {
+        string s = to_string(x);
+        int m = s.size(), k = sub.size();
+        if(m < k) return 0;
+        LL f[m];
+        memset(f, -1, sizeof f);
+
+        auto dfs = [&](auto& dfs, int i, bool isLimit) -> LL {
+            if(i == m)  return 1;
+            if(!isLimit && f[i] != -1) return f[i];
+
+            LL ans = 0;
+            int OFFSET = m - k, up = isLimit ? s[i] - '0' : 9;
+
+            // 没有到后缀s的位置
+            if(i < OFFSET) {
+                // 限制应该加在循环里，不能加在上面
+                for(int d = 0; d <= min(up, limit); ++ d) {
+                    ans += dfs(dfs, i + 1, isLimit && d == up);
+                }
+            } else {
+                int d = sub[i - OFFSET] - '0';
+                // 后缀位置，符合限制即可继续
+                if(d <= up && d <= limit) ans = dfs(dfs, i + 1, isLimit && d == up);  
+            }
+
+            if(!isLimit) f[i] = ans;
+            return ans;
+        };
+
+        return dfs(dfs, 0, true);
+    }
+
+    long long numberOfPowerfulInt(long long start, long long finish, int limit, string s) {
+        this->limit = limit;
+        this->sub = s;
+
+        return solve(finish) - solve(start - 1);
+    }
+};
+```
