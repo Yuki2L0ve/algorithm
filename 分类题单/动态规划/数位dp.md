@@ -1000,13 +1000,13 @@ public:
 
         auto dfs = [&](auto& dfs, int i, bool isLimit) -> LL {
             if(i == m)  return 1;
-            if(!isLimit && f[i] != -1) return f[i];
+            if(!isLimit && ~f[i]) return f[i];
 
             LL ans = 0;
             int OFFSET = m - k, up = isLimit ? s[i] - '0' : 9;
 
             // 没有到后缀s的位置
-            if(i < OFFSET) {
+            if (i < OFFSET) {
                 // 限制应该加在循环里，不能加在上面
                 for(int d = 0; d <= min(up, limit); ++ d) {
                     ans += dfs(dfs, i + 1, isLimit && d == up);
