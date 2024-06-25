@@ -72,3 +72,28 @@ public:
     }
 };
 ```
+
+## ABC129_C
+[传送门](https://atcoder.jp/contests/abc129/tasks/abc129_c)
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 1e5 + 10, MOD = 1e9 + 7;
+int f[N], n, m, x;
+bool st[N];
+
+int main() {
+    scanf("%d%d", &n, &m);
+    while (m -- ) {
+        scanf("%d", &x);
+        st[x] = true;
+    }
+    
+    st[0] = true;   f[0] = 1;
+    if (!st[1]) f[1] = 1;
+    for (int i = 2; i <= n; ++ i) 
+        if (!st[i])
+            f[i] = (f[i - 1] + f[i - 2]) % MOD;
+    printf("%d\n", f[n]);
+}
+```
