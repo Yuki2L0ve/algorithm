@@ -97,3 +97,39 @@ int main() {
     printf("%d\n", f[n]);
 }
 ```
+
+## LC746. 使用最小花费爬楼梯
+[传送门](https://leetcode.cn/problems/min-cost-climbing-stairs/description/)
+```C++
+// 记忆化搜索
+class Solution {
+public:
+    int minCostClimbingStairs(vector<int>& cost) {
+        int n = cost.size(), f[n + 1];
+        memset(f, -1, sizeof f);
+
+        auto dfs = [&](auto& dfs, int i) -> int {
+            if (i <= 1) return 0;
+            int &ans = f[i];
+            if (~ans)   return ans;
+            return ans = min(dfs(dfs, i - 1) + cost[i - 1], dfs(dfs, i - 2) + cost[i - 2]);
+        };
+
+        return dfs(dfs, n);
+    }
+};
+```
+```C++
+// 动态规划
+class Solution {
+public:
+    int minCostClimbingStairs(vector<int>& cost) {
+        int n = cost.size(), f[n + 1];
+        f[0] = f[1] = 0;
+        for (int i = 2; i <= n; ++ i) {
+            f[i] = min(f[i - 1] + cost[i - 1], f[i - 2] + cost[i - 2]);
+        }
+        return f[n];
+    }
+};
+```
