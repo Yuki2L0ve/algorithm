@@ -133,3 +133,46 @@ public:
     }
 };
 ```
+
+## LC377. 组合总和 Ⅳ
+[传送门](https://leetcode.cn/problems/combination-sum-iv/description/)
+```C++
+// 记忆化搜索
+class Solution {
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        int n = nums.size(), f[target + 1];
+        memset(f, -1, sizeof f);
+
+        auto dfs = [&](auto& dfs, int i) -> int {
+            if (i == 0) return 1;
+            if (~f[i])  return f[i];
+
+            int ans = 0;
+            for (auto& x : nums)
+                if (x <= i)
+                    ans += dfs(dfs, i - x);
+            
+            return f[i] = ans;
+        };
+
+        return dfs(dfs, target);
+    }
+};
+```
+```C++
+// 动态规划
+class Solution {
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        vector<unsigned> f(target + 1);
+        f[0] = 1;
+        for (int i = 1; i <= target; ++ i) {
+            for (auto& x : nums)
+                if (x <= i)
+                    f[i] += f[i - x];
+        }
+        return f[target];
+    }
+};
+```
