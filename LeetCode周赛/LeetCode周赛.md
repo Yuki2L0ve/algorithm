@@ -131,21 +131,20 @@ public:
 class Solution {
 public:
     string clearStars(string s) {
+        vector<int> v[26];  // 表示从a - z的字母栈，栈中存放的是下标
         int n = s.size();
-        vector<int> v[26];
-        vector<bool> st(n);
-
+        vector<bool> st(n); // 记录s中下标为i的字符是否是要被删除的
         for (int i = 0; i < n; ++ i) {
-            if (s[i] == '*') {
+            if (s[i] != '*') {  // 不是*则直接把下标放到栈中
+                v[s[i] - 'a'].push_back(i);
+            } else {
                 for (int c = 0; c < 26; ++ c) {
                     if (!v[c].empty()) {
-                        st[v[c].back()] = true;
+                        st[v[c].back()] = true; // 标记为true，该位置为*，需要被删除
                         v[c].pop_back();
                         break;
                     }
                 }
-            } else {
-                v[s[i] - 'a'].push_back(i);
             }
         }
 
