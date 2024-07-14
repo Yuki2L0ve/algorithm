@@ -169,7 +169,7 @@ public:
             int x = nums[i];
             ans = min(ans, abs(x - k));
             for (int j = i - 1; j >= 0 && (nums[j] & x) != nums[j]; -- j) {
-                nums[j] &= x;
+                nums[j] |= x;
                 ans = min(ans, abs(nums[j] - k));
             }
         }
