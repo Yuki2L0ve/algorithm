@@ -41,39 +41,15 @@ public:
 ```C++
 class Solution {
 public:
-    #define x first
-    #define y second
-    int closestToTarget(vector<int>& nums, int k) {
-        vector<pair<int, int>> ors;
-        unordered_set<int> S;
-        for (int i = nums.size() - 1; i >= 0; -- i) {
-            ors.emplace_back(nums[i], i);
-
-            for (auto& o : ors) {
-                o.x |= nums[i];
-            }
-
-            int k = 0;
-            for (int j = 0; j < ors.size(); ++ j) {
-                if (ors[k].x == ors[j].x) {
-                    ors[k].y = ors[j].y;
-                } else {
-                    ors[++ k] = ors[j];
-                }
-            }
-
-            ors.resize(k + 1);
-
-            for (auto& o : ors) {
-                S.insert(o.x);
+    int minimumDifference(vector<int>& nums, int k) {
+        int n = nums.size(), ans = INT_MAX;
+        for (int i = 0; i < n; ++ i) {
+            ans = min(ans, abs(nums[i] - k));
+            for (int j = i - 1; j >= 0 && (nums[j] | nums[i]) != nums[j]; -- j) {
+                nums[j] |= nums[i];
+                ans = min(ans, abs(nums[j] - k));
             }
         }
-
-        int ans = INT_MAX;
-        for (auto& x : S) {
-            ans = min(ans, abs(x - k));
-        }
-
         return ans;
     }
 };
