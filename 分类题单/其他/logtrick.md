@@ -120,7 +120,7 @@ public:
 ```
 
 ## LC3171. 找到按位与最接近 K 的子数组
-[传送门](https://leetcode.cn/problems/find-a-value-of-a-mysterious-function-closest-to-target/description/)
+[传送门]([https://leetcode.cn/problems/find-a-value-of-a-mysterious-function-closest-to-target/description/](https://leetcode.cn/problems/find-subarray-with-bitwise-or-closest-to-k/description/))
 ```C++
 class Solution {
 public:
