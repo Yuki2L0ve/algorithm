@@ -198,3 +198,38 @@ public:
     }
 };
 ```
+
+## LC3097. 或值至少为 K 的最短子数组 II
+[传送门](https://leetcode.cn/problems/shortest-subarray-with-or-at-least-k-ii/description/)
+```C++
+class Solution {
+public:
+    #define x first
+    #define y second
+    int minimumSubarrayLength(vector<int>& nums, int target) {
+        int n = nums.size(), ans = INT_MAX;
+        vector<pair<int, int>> ors;
+        unordered_set<int> S;
+        
+        for (int i = n - 1; i >= 0; -- i) {
+            ors.emplace_back(0, i);
+
+            for (auto& o : ors) o.x |= nums[i];
+
+            int k = 0;
+            for (int j = 0; j < ors.size(); ++ j) {
+                if (ors[k].x == ors[j].x)   ors[k].y = ors[j].y;
+                else    ors[++ k] = ors[j];
+            }
+
+            ors.resize(k + 1);
+
+            for (auto& o : ors)
+                if (o.x >= target)
+                    ans = min(ans, o.y - i + 1);
+        }
+
+        return ans == INT_MAX ? -1 : ans;
+    }
+};
+```
