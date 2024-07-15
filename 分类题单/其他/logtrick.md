@@ -33,8 +33,8 @@ public:
     #define x first
     #define y second
     int subarrayBitwiseORs(vector<int>& nums) {
-        // 存储每个子数组的按位或结果和子数组的起始位置。
-        vector<pair<int, int>> ors; // (按位或结果, 子数组的起始位置)
+        // 存储每个子数组的按位或结果和子数组的结束位置,也就是右端点。
+        vector<pair<int, int>> ors; // (按位或结果, 子数组的结束位置)
         unordered_set<int> S;   // 存储所有不同的按位或结果
 
         // 逆序遍历,这样做是为了每次将当前元素加入到之前所有子数组的前面,并计算新的按位或结果
