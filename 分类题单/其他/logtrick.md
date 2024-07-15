@@ -60,10 +60,6 @@ public:
                     ors[++ k] = ors[j];
                 }
             }
-            if (i == 0) {
-                cout << "k = " << k << ",size = " << ors.size() << endl;
-                cout << ors[0].x << ", " << ors[0].y << endl;
-            }
 
             // 由于可能存在多个相同的按位或结果,因此通过调整 ors 的大小来去掉重复项
             ors.resize(k + 1);
