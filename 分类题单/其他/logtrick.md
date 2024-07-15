@@ -206,31 +206,18 @@ public:
 ```C++
 class Solution {
 public:
-    #define x first
-    #define y second
-    int minimumSubarrayLength(vector<int>& nums, int target) {
+    int minimumSubarrayLength(vector<int>& nums, int k) {
         int n = nums.size(), ans = INT_MAX;
-        vector<pair<int, int>> ors;
-        unordered_set<int> S;
-        
-        for (int i = n - 1; i >= 0; -- i) {
-            ors.emplace_back(0, i);
-
-            for (auto& o : ors) o.x |= nums[i];
-
-            int k = 0;
-            for (int j = 0; j < ors.size(); ++ j) {
-                if (ors[k].x == ors[j].x)   ors[k].y = ors[j].y;
-                else    ors[++ k] = ors[j];
+        for (int i = 0; i < n; ++ i) {
+            // 先处理i这个单独元素
+            if (nums[i] >= k)   return 1;
+            for (int j = i - 1; j >= 0 && (nums[j] | nums[i]) != nums[j]; -- j) {
+                nums[j] |= nums[i];
+                if (nums[j] >= k) {
+                    ans = min(ans, i - j + 1);
+                }
             }
-
-            ors.resize(k + 1);
-
-            for (auto& o : ors)
-                if (o.x >= target)
-                    ans = min(ans, o.y - i + 1);
         }
-
         return ans == INT_MAX ? -1 : ans;
     }
 };
