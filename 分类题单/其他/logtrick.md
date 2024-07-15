@@ -170,31 +170,15 @@ public:
 ```C++
 class Solution {
 public:
-    #define x first
-    #define y second
     vector<int> smallestSubarrays(vector<int>& nums) {
         int n = nums.size();
-        vector<pair<int, int>> ors;
         vector<int> ans(n);
-        for (int i = n - 1; i >= 0; -- i) {
-            ors.emplace_back(0, i);
-
-            for (auto& o : ors) {
-                o.x |= nums[i];
+        for (int i = 0; i < n; ++ i) {
+            ans[i] = 1; // 先单独处理i这个位置的元素
+            for (int j = i - 1; j >= 0 && (nums[j] | nums[i]) != nums[j]; -- j) {
+                nums[j] |= nums[i];
+                ans[j] = i - j + 1;
             }
-
-            int k = 0;
-            for (int j = 0; j < ors.size(); ++ j) {
-                if (ors[k].x == ors[j].x) {
-                    ors[k].y = ors[j].y;
-                } else {
-                    ors[++ k] = ors[j];
-                }
-            }
-
-            ors.resize(k + 1);
-
-            ans[i] = ors[0].y - i + 1;
         }
         return ans;
     }
