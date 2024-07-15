@@ -4,15 +4,15 @@
 class Solution {
 public:
     int subarrayBitwiseORs(vector<int>& arr) {
-        unordered_set<int> S;
+        map<int, int> mp;
         for (int i = 0; i < arr.size(); ++ i) {
-            S.insert(arr[i]);
+            ++ mp[arr[i]];
             for (int j = i - 1; j >= 0 && (arr[j] | arr[i]) != arr[j]; -- j) {
+                ++ mp[arr[j] | arr[i]];
                 arr[j] |= arr[i];
-                S.insert(arr[j]);
             }
         }
-        return S.size();
+        return mp.size();
     }
 };
 ```
