@@ -211,8 +211,9 @@ public:
         for (int i = 0; i < n; ++ i) {
             // 先处理i这个单独元素
             if (nums[i] >= k)   return 1;
+            // 这种方式有效避免了对那些 nums[i] 无法改变按位或结果的情况的无用计算。
             for (int j = i - 1; j >= 0 && (nums[j] | nums[i]) != nums[j]; -- j) {
-                nums[j] |= nums[i];
+                nums[j] |= nums[i]; // 更新 nums[j] 的值，使其成为从 j 到 i 所有元素的按位或结果
                 if (nums[j] >= k) {
                     ans = min(ans, i - j + 1);
                 }
