@@ -133,7 +133,7 @@ public:
             ors.emplace_back(nums[i], i);
 
             for (auto& o : ors) {
-                o.x &= nums[i];
+                o.x |= nums[i];
             }
 
             int k = 0;
