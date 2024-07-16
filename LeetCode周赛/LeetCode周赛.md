@@ -67,6 +67,17 @@ class Solution {
 ```
 
 [LC3176. 求出最长好子序列 I](https://leetcode.cn/problems/find-the-maximum-length-of-a-good-subsequence-i/description/)
+`f[x][j]`表示以数值x结尾、最多有j对相邻元素不同的最长子序列的长度
+设`x = nums[i]`
+1. 不选x：那么`f[x][j]`不变，即`f[x][j] = f[x][j]`
+2. 选x：
+   a. 把x加到以y结尾的子序列的末尾（且y=x），那么`f[x][j] = f[y][j] + 1`
+   b. 把x加到以y结尾的子序列的末尾（且y!=x），那么`f[x][j] = f[y][j - 1] + 1`
+
+所以：
+`f[x][j] = max(f[x][j] + 1, max(f[y][j-1] for y in set) + 1)`
+其实情况一是不需要考虑的，因为2(a)一定比1要好，因为`f[x][j] = f[y][j] + 1`的长度肯定是优于`f[x][j] = f[x][j]`的。
+
 ```C++
 class Solution {
 public:
