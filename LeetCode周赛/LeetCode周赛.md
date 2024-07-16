@@ -15,6 +15,21 @@ public:
     }
 };
 ```
+```java
+class Solution {
+    public String clearDigits(String s) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            if (Character.isDigit(c)) {
+                sb.deleteCharAt(sb.length() - 1);
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+}
+```
 
 [LC3175. 找到连续赢 K 场比赛的第一位玩家](https://leetcode.cn/problems/find-the-first-player-to-win-k-games-in-a-row/description/)
 ```C++
