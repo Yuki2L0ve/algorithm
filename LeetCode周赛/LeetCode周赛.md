@@ -67,6 +67,7 @@ class Solution {
 ```
 
 [LC3176. 求出最长好子序列 I](https://leetcode.cn/problems/find-the-maximum-length-of-a-good-subsequence-i/description/)
+
 `f[x][j]`表示以数值x结尾、最多有j对相邻元素不同的最长子序列的长度
 设`x = nums[i]`
 1. 不选x：那么`f[x][j]`不变，即`f[x][j] = f[x][j]`
