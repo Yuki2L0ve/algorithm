@@ -36,17 +36,34 @@ class Solution {
 class Solution {
 public:
     int findWinningPlayer(vector<int>& skills, int k) {
-        int mx_i = 0, win = 0;
-        for (int i = 1; i < skills.size() && win < k; ++ i) {
-            if (skills[i] > skills[mx_i]) {
-                mx_i = i;
-                win = 0;
+        int idx = 0, cnt = 0, n = skills.size();
+        for (int i = 1; i < n && cnt < k; ++ i) {
+            if (skills[i] > skills[idx]) {
+                idx = i;
+                cnt = 1;
+            } else {
+                ++ cnt;
             }
-            ++ win;
         }
-        return mx_i;
+        return idx;
     }
 };
+```
+```java
+class Solution {
+    public int findWinningPlayer(int[] skills, int k) {
+        int idx = 0, cnt = 0, n = skills.length;
+        for (int i = 1; i < n && cnt < k; ++ i) {
+            if (skills[i] > skills[idx]) {
+                idx = i;
+                cnt = 1;
+            } else {
+                ++ cnt;
+            }
+        }
+        return idx;
+    }
+}
 ```
 
 [LC3176. 求出最长好子序列 I](https://leetcode.cn/problems/find-the-maximum-length-of-a-good-subsequence-i/description/)
