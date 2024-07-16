@@ -121,6 +121,28 @@ public:
     }
 };
 ```
+```java
+class Solution {
+    public int maximumLength(int[] nums, int k) {
+        Map<Integer, int[]> fs = new HashMap<>();
+        int[] mx = new int[k + 1];
+        Arrays.fill(mx, 0);
+
+        for (int x : nums) {
+            if (!fs.containsKey(x)) {
+                fs.put(x, new int[k + 1]);
+            }
+            int[] f = fs.get(x);
+            for (int j = k; j >= 0; -- j) {
+                f[j] = Math.max(f[j], j > 0 ? mx[j - 1] : 0) + 1;
+                mx[j] = Math.max(mx[j], f[j]);
+            }
+        }
+
+        return mx[k];
+    }
+}
+```
 
 
 # 第400场周赛
