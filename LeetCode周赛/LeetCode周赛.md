@@ -12,6 +12,25 @@ public:
 };
 ```
 
+[3179. K 秒后第 N 个元素的值](https://leetcode.cn/problems/find-the-n-th-value-after-k-seconds/description/)
+```C++
+// 暴力
+class Solution {
+public:
+    const int MOD = 1e9 + 7;
+    int valueAfterKSeconds(int n, int k) {
+        vector<int> a(n + 1, 1), s(n + 2);
+        for (int T = 1; T <= k; ++ T) {
+            for (int i = 1; i <= n; ++ i) {
+                s[i] = (s[i - 1] + a[i]) % MOD;
+            }
+            a = s;
+        }
+        return a[n] % MOD;
+    }
+};
+```
+
 
 # 第132场双周赛
 [LC3174. 清除数字](https://leetcode.cn/problems/clear-digits/description/)
