@@ -1,4 +1,17 @@
-记录一些LeetCode周赛题单。
+记录每周的LeetCode周赛题单
+
+# 第401场周赛
+[LC3178. 找出 K 秒后拿着球的孩子](https://leetcode.cn/problems/find-the-child-who-has-the-ball-after-k-seconds/description/)
+```C++
+class Solution {
+public:
+    int numberOfChild(int n, int k) {
+        int d = k / (n - 1), r = k % (n - 1);
+        return d & 1 ? n - r - 1 : r;
+    }
+};
+```
+
 
 # 第132场双周赛
 [LC3174. 清除数字](https://leetcode.cn/problems/clear-digits/description/)
