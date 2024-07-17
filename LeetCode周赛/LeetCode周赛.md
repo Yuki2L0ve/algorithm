@@ -70,6 +70,38 @@ public:
 };
 ```
 
+[LC3180. 执行操作可获得的最大总奖励 I](https://leetcode.cn/problems/maximum-total-reward-using-operations-i/description/)
+```C++
+class Solution {
+public:
+    int maxTotalReward(vector<int>& rewardValues) {
+        // 去重
+        unordered_set<int> S(rewardValues.begin(), rewardValues.end());
+        vector<int> nums(S.begin(), S.end());
+        sort(nums.begin(), nums.end());
+        // 总奖励不会超过4000, 最坏情况下1+2+4+8+...1024或者1999+2000两者取最大值 
+        int n = nums.size(), m = 2 * nums.back() - 1;
+
+        vector<bool> f(m + 1);
+        f[0] = true;
+
+        for (auto& x : nums) {
+            for (int j = m; j >= x; -- j) {
+                if (j - x < x && f[j - x]) {
+                    f[j] = true;
+                }
+            }
+        }
+
+        for (int j = m; j >= 0; -- j)
+            if (f[j])
+                return j;
+
+        return 0;
+    }
+};
+```
+
 
 # 第132场双周赛
 [LC3174. 清除数字](https://leetcode.cn/problems/clear-digits/description/)
