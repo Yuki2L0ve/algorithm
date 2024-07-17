@@ -30,6 +30,45 @@ public:
     }
 };
 ```
+```C++
+// 组合数学
+const int MOD = 1e9 + 7, N = 1e5 + 10;
+using LL = long long ;
+LL fac[N + 1], inv[N + 1];
+
+LL qmi(LL a, LL b) {
+    LL ans = 1;
+    while (b) {
+        if (b &  1) ans = ans * a % MOD;
+        a = a * a % MOD;
+        b >>= 1;
+    }
+    return ans;
+}
+
+auto init = []{
+    fac[0] = 1;
+    for (int i = 1; i <= N; ++ i) {
+        fac[i] = fac[i - 1] * i % MOD;
+    }
+    inv[N] = qmi(fac[N], MOD - 2);
+    for (int i = N - 1; i >= 0; -- i) {
+        inv[i] = inv[i + 1] * (i + 1) % MOD;
+    }
+    return 0;
+}();
+
+LL solve(int n, int k) {
+    return fac[n] * inv[k] % MOD * inv[n - k] % MOD;
+}
+
+class Solution {
+public:
+    int valueAfterKSeconds(int n, int k) {
+        return solve(n + k - 1, k);
+    }
+};
+```
 
 
 # 第132场双周赛
