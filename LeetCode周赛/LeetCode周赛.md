@@ -102,6 +102,29 @@ public:
 };
 ```
 
+[LC3181. 执行操作可获得的最大总奖励 II](https://leetcode.cn/problems/maximum-total-reward-using-operations-ii/description/)
+```C++
+class Solution {
+public:
+    int maxTotalReward(vector<int>& nums) {
+        ranges::sort(nums);
+        nums.erase(unique(nums.begin(), nums.end()), nums.end());
+        
+        bitset<100000> f{1};
+        for (int v : nums) {
+            int shift = f.size() - v;
+            f |= f << shift >> (shift - v);
+        }
+
+        for (int i = nums.back() * 2 - 1; i >= 0; -- i)
+            if (f.test(i))
+                return i;
+        
+        return 0;
+    }
+};
+```
+
 
 # 第132场双周赛
 [LC3174. 清除数字](https://leetcode.cn/problems/clear-digits/description/)
