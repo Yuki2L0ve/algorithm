@@ -1,4 +1,36 @@
 记录每周的LeetCode周赛题单
+# 第402场周赛
+[LC3184. 构成整天的下标对数目 I](https://leetcode.cn/problems/count-pairs-that-form-a-complete-day-i/description/)
+```C++
+class Solution {
+public:
+    int countCompleteDayPairs(vector<int>& hours) {
+        long long ans = 0;
+        int cnt[24]{};
+        for (auto& h : hours) {
+            ans += cnt[(24 - h % 24) % 24];
+            ++ cnt[h % 24];
+        }
+        return ans;
+    }
+};
+```
+
+[LC3185. 构成整天的下标对数目 II](https://leetcode.cn/problems/count-pairs-that-form-a-complete-day-ii/description/)
+```c++
+class Solution {
+public:
+    long long countCompleteDayPairs(vector<int>& hours) {
+        long long ans = 0;
+        int cnt[24]{};
+        for (auto& h : hours) {
+            ans += cnt[(24 - h % 24) % 24];
+            ++ cnt[h % 24];
+        }
+        return ans;
+    }
+};
+```
 
 # 第401场周赛
 [LC3178. 找出 K 秒后拿着球的孩子](https://leetcode.cn/problems/find-the-child-who-has-the-ball-after-k-seconds/description/)
