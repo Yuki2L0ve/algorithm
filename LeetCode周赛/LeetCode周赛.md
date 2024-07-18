@@ -32,6 +32,91 @@ public:
 };
 ```
 
+[LC3186. 施咒的最大总伤害](https://leetcode.cn/problems/maximum-total-damage-with-spell-casting/description/)
+```C++
+class Solution {
+public:
+    long long maximumTotalDamage(vector<int>& power) {
+        unordered_map<int, int> cnt;
+        for (auto& x : power)   ++ cnt[x];
+        // (元素，出现次数)
+        vector<pair<int, int>> v(cnt.begin(), cnt.end());
+        ranges::sort(v);
+
+        int n = v.size();
+        vector<long long> f(n + 1);
+        for (int i = 0, j = 0; i < n; ++ i) {
+            auto& [x, c] = v[i];
+            while (v[j].first < x - 2)  ++ j;
+            f[i + 1] = max(f[i], f[j] + 1ll * x * c);
+        }
+
+        return f[n];
+    }
+};
+```
+
+[LC3187. 数组中的峰值](https://leetcode.cn/problems/peaks-in-array/description/)
+```C++
+class BinaryIndexTree {
+public:
+    vector<int> tr;
+    int n;
+
+    BinaryIndexTree(int n) : tr(n) {
+        this->n = n;
+    }
+
+    int lowbit(int x){
+        return x & -x;
+    }
+
+    void modify(int x, int val){
+        for (int i = x; i < this->n; i += lowbit(i)) tr[i] += val;
+    }
+
+    int query(int x) {
+        int ans = 0;
+        for (int i = x; i > 0; i -= lowbit(i)) ans += tr[i];
+        return ans;
+    }
+};
+
+class Solution {
+public:
+    vector<int> countOfPeaks(vector<int>& nums, vector<vector<int>>& queries) {
+        //修改一个点x，只对x-1,x,x+1是否是峰值元素数量造成影响
+        int n = nums.size();
+        BinaryIndexTree tr(n - 1); //只会统计到 n - 1 的位置
+        vector<int> ans;
+
+        function <void(int, int)> update = [&] (int i, int val){ //用于对峰值元素数量进行更新
+            if(nums[i - 1] < nums[i] && nums[i] > nums[i + 1]) tr.modify(i, val);
+        };
+
+        for (int i = 1; i <= n - 2; ++ i) {
+            update(i, 1);
+        }
+
+        for (auto &q: queries) {
+            int op = q[0], x = q[1], y = q[2];
+            if (op == 1) { // 统计的是[x + 1, y - 1]中峰值出现的次数，因为端点不会是峰值，而且如果考虑端点的话，会受到[x, y]区间以外的数字的影响
+                ans.push_back(y - x + 1 <= 2 ? 0 : tr.query(y - 1) - tr.query(x + 1 - 1));
+            } else {
+                // 将[x - 1, x + 1]部分的峰值数量全部删掉
+                for (int i = max(x - 1, 1); i <= min(x + 1, n - 2); ++ i) update(i, -1);
+                // 将[x - 1, x + 1]部分的峰值数量全部更新
+                nums[x] = y; // 先修改
+                for (int i = max(x - 1, 1); i <= min(x + 1, n - 2); ++ i) update(i, 1);
+            }
+        }
+
+        return ans;
+    }
+};
+```
+---
+
 # 第401场周赛
 [LC3178. 找出 K 秒后拿着球的孩子](https://leetcode.cn/problems/find-the-child-who-has-the-ball-after-k-seconds/description/)
 ```C++
