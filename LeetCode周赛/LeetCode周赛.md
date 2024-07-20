@@ -1,4 +1,54 @@
-记录每周的LeetCode周赛题单
+# 第 133 场双周赛
+[LC3190. 使所有元素都可以被 3 整除的最少操作数](https://leetcode.cn/problems/find-minimum-operations-to-make-all-elements-divisible-by-three/description/)
+```C++
+class Solution {
+public:
+    int minimumOperations(vector<int>& nums) {
+        int ans = 0;
+        for (auto& x : nums) {
+            int r = x % 3;
+            ans += min(r, 3 - r);
+        }
+        return ans;
+    }
+};
+```
+
+[LC3191. 使二进制数组全部等于 1 的最少操作次数 I](https://leetcode.cn/problems/minimum-operations-to-make-binary-array-elements-equal-to-one-i/description/)
+```C++
+class Solution {
+public:
+    int minOperations(vector<int>& nums) {
+        int n = nums.size(), ans = 0;
+        for (int i = 0; i < n - 2; ++ i) {
+            if (!nums[i]) {
+                nums[i + 1] ^= 1;
+                nums[i + 2] ^= 1;
+                ++ ans;
+            }
+        }
+        return nums[n - 2] && nums[n - 1] ? ans : -1;
+    }
+};
+```
+
+[LC3192. 使二进制数组全部等于 1 的最少操作次数 II](https://leetcode.cn/problems/minimum-operations-to-make-binary-array-elements-equal-to-one-ii/description/)
+```C++
+class Solution {
+public:
+    int minOperations(vector<int>& nums) {
+        int ans = 0;
+        for (auto& x : nums) {
+            ans += x == ans % 2;
+        }
+        return ans;
+    }
+};
+```
+
+---
+
+
 # 第402场周赛
 [LC3184. 构成整天的下标对数目 I](https://leetcode.cn/problems/count-pairs-that-form-a-complete-day-i/description/)
 ```C++
