@@ -15,7 +15,8 @@ WHERE
 # LC584. 寻找用户推荐人
 [传送门](https://leetcode.cn/problems/find-customer-referee/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT name 
+SELECT 
+	name 
 FROM
 	Customer 
 WHERE
@@ -130,4 +131,64 @@ FROM
 	Activity 
 GROUP BY
 	machine_id
+```
+
+LC577. 员工奖金
+[传送门](https://leetcode.cn/problems/employee-bonus/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+SELECT 
+	name
+	bonus 
+FROM
+	Employee e
+	LEFT JOIN Bonus b ON e.empId = b.empId 
+WHERE
+	bonus < 1000 
+	OR b.empId IS NULL;
+```
+
+LC1280. 学生们参加各科测试的次数
+[传送门](https://leetcode.cn/problems/students-and-examinations/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+SELECT
+	stu.student_id,
+	stu.student_name,
+	sub.subject_name,
+	count( e.subject_name ) AS attended_exams 
+FROM
+	Students stu
+	CROSS JOIN Subjects sub
+	LEFT JOIN Examinations e ON stu.student_id = e.student_id 
+	AND sub.subject_name = e.subject_name 
+GROUP BY
+	stu.student_id,
+	sub.subject_name 
+ORDER BY
+	stu.student_id,
+	sub.subject_name;
+```
+
+#LC 570. 至少有5名直接下属的经理
+[传送门](https://leetcode.cn/problems/managers-with-at-least-5-direct-reports/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+SELECT 
+	name 
+FROM
+	Employee 
+WHERE
+	id IN ( SELECT DISTINCT managerId FROM Employee GROUP BY managerId HAVING count( managerId ) >= 5 );
+```
+
+
+#LC1934. 确认率
+[传送门](https://leetcode.cn/problems/confirmation-rate/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+SELECT
+	s.user_id,
+	round( ifnull( avg( c.action = 'confirmed' ), 0 ), 2 ) AS confirmation_rate 
+FROM
+	Signups s
+	LEFT JOIN Confirmations c ON s.user_id = c.user_id 
+GROUP BY
+	s.user_id;
 ```
