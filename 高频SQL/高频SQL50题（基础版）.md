@@ -168,7 +168,7 @@ ORDER BY
 	sub.subject_name;
 ```
 
-#LC 570. 至少有5名直接下属的经理
+# LC 570. 至少有5名直接下属的经理
 [传送门](https://leetcode.cn/problems/managers-with-at-least-5-direct-reports/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
 SELECT 
@@ -180,7 +180,7 @@ WHERE
 ```
 
 
-#LC1934. 确认率
+# LC1934. 确认率
 [传送门](https://leetcode.cn/problems/confirmation-rate/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
 SELECT
