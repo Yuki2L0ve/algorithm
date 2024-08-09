@@ -171,12 +171,16 @@ ORDER BY
 # LC 570. 至少有5名直接下属的经理
 [传送门](https://leetcode.cn/problems/managers-with-at-least-5-direct-reports/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT 
-	name 
-FROM
-	Employee 
-WHERE
-	id IN ( SELECT DISTINCT managerId FROM Employee GROUP BY managerId HAVING count( managerId ) >= 5 );
+select
+    m.name
+from
+    Employee m
+join
+    Employee e on e.managerId = m.id
+group by
+    e.managerId
+having 
+    count(e.id) >= 5
 ```
 
 
@@ -342,4 +346,77 @@ group by
     customer_id
 having 
     count(distinct(product_key)) = (select count(*) from Product)
+```
+
+# LC1731. 每位经理的下属员工数量
+[传送门](https://leetcode.cn/problems/the-number-of-employees-which-report-to-each-employee/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+select
+    m.employee_id,
+    m.name,
+    count(e.employee_id) as reports_count,
+    round(avg(e.age)) as average_age 
+from
+    Employees m
+join
+    Employees e on e.reports_to = m.employee_id
+group by
+    m.employee_id, m.name
+order by
+    m.employee_id
+```
+
+# LC1789. 员工的直属部门
+[传送门](https://leetcode.cn/problems/primary-department-for-each-employee/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+with t as (
+    select
+      employee_id,
+      department_id,
+      primary_flag,
+      count(*) over (partition by employee_id) as cnt
+    from Employee 
+)
+
+select 
+    employee_id,
+    department_id
+from
+    t
+where
+    t.cnt = 1 or t.primary_flag = 'Y'
+```
+
+# LC610. 判断三角形
+[传送门](https://leetcode.cn/problems/triangle-judgement/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+select x, y, z,
+case when
+    x + y > z and x + z > y and y + z > x
+    then 'Yes' else 'No'
+    end as triangle 
+from
+    Triangle
+```
+
+# LC180. 连续出现的数字
+[传送门](https://leetcode.cn/problems/consecutive-numbers/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+with t as (
+    select
+        id,
+        num,
+        id + 1 - row_number() over (partition by num order by id) as serialNum
+    from
+        Logs
+)
+
+select 
+    distinct num as ConsecutiveNums 
+from 
+    t
+group by
+    t.num, t.serialNum
+having 
+    count(*) >= 3
 ```
