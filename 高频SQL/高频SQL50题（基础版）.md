@@ -133,7 +133,7 @@ GROUP BY
 	machine_id
 ```
 
-LC577. 员工奖金
+# LC577. 员工奖金
 [传送门](https://leetcode.cn/problems/employee-bonus/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
 SELECT 
@@ -147,7 +147,7 @@ WHERE
 	OR b.empId IS NULL;
 ```
 
-LC1280. 学生们参加各科测试的次数
+# LC1280. 学生们参加各科测试的次数
 [传送门](https://leetcode.cn/problems/students-and-examinations/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
 SELECT
