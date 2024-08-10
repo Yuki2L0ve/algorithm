@@ -3,169 +3,171 @@
 # LC1757. 可回收且低脂的产品
 [传送门](https://leetcode.cn/problems/recyclable-and-low-fat-products/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT
-	product_id 
-FROM
-	Products 
-WHERE
-	low_fats = 'Y' 
-	AND recyclable = 'Y';
+select 
+    product_id
+from 
+    Products
+where 
+    low_fats = 'Y' and recyclable = 'Y'
 ```
 
 # LC584. 寻找用户推荐人
 [传送门](https://leetcode.cn/problems/find-customer-referee/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT 
-	name 
-FROM
-	Customer 
-WHERE
-	referee_id != 2 
-	OR referee_id IS NULL;
+select 
+    name 
+from 
+    Customer 
+where 
+    referee_id != 2 or referee_id is null
 ```
 
 # LC595. 大的国家
 [传送门](https://leetcode.cn/problems/big-countries/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT 
-	name
-	population,
-	area 
-FROM
-	world 
-WHERE
-	area >= 3000000 
-	OR population >= 25000000;
+select
+    name, population, area    
+from
+    World 
+where
+    area >= 3000000 or population >= 25000000
 ```
 
 # LC1148. 文章浏览 I
 [传送门](https://leetcode.cn/problems/article-views-i/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT DISTINCT
-	author_id AS id 
-FROM
-	Views 
-WHERE
-	author_id = viewer_id 
-ORDER BY
-	author_id;
+select 
+    distinct author_id as id 
+from
+    Views
+where
+    author_id = viewer_id
+order by
+    id
 ```
 
 # LC1683. 无效的推文
 [传送门](https://leetcode.cn/problems/invalid-tweets/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT
-	tweet_id 
-FROM
-	Tweets 
-WHERE
-	char_length( content ) > 15;
+select tweet_id from Tweets where char_length(content) > 15
 ```
 
 # LC1378. 使用唯一标识码替换员工ID
 [传送门](https://leetcode.cn/problems/replace-employee-id-with-the-unique-identifier/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT
-	EmployeeUNI.unique_id,
-	Employees.NAME 
-FROM
-	Employees
-	LEFT JOIN EmployeeUNI ON Employees.id = EmployeeUNI.id;
+select
+    unique_id, 
+    name
+from
+    Employees e
+left join
+    EmployeeUNI eu
+on
+    e.id = eu.id 
 ```
 
 # LC1068. 产品销售分析 I
 [传送门](https://leetcode.cn/problems/product-sales-analysis-i/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT
-	p.product_name,
-	s.YEAR,
-	s.price 
-FROM
-	Sales s
-	INNER JOIN Product p ON s.product_id = p.product_id;
+select
+    product_name,
+    year,
+    price
+from
+    Sales s
+join
+    Product p
+on
+    s.product_id = p.product_id 
 ```
 
 # LC1581. 进店却未进行过交易的顾客
 [传送门](https://leetcode.cn/problems/customer-who-visited-but-did-not-make-any-transactions/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT
-	customer_id,
-	count( customer_id ) AS count_no_trans 
-FROM
-	Visits v
-	LEFT JOIN Transactions t ON v.visit_id = t.visit_id 
-WHERE
-	t.transaction_id IS NULL 
-GROUP BY
-	customer_id;
+select 
+    customer_id,
+    count(customer_id) as count_no_trans 
+from 
+    Visits v 
+left join 
+    Transactions t
+on 
+    v.visit_id = t.visit_id 
+where 
+    transaction_id is null
+group by
+    customer_id
 ```
 
 # LC197. 上升的温度
 [传送门](https://leetcode.cn/problems/rising-temperature/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-WITH func AS (
-	SELECT
-		id,
-		recordDate,
-		Temperature,
-		lag( recordDate, 1 ) over ( ORDER BY recordDate ) AS last_date,
-		lag( Temperature, 1 ) over ( ORDER BY recordDate ) AS last_temperature 
-	FROM
+with t as (
+	select
+		*,
+		lag(recordDate, 1) over (order by recordDate) as prev_date,
+		lag(Temperature, 1) over (order by recordDate) as prev_temp 
+	from
 		Weather 
-	) SELECT
+) 
+
+select
 	id 
-FROM
-	func 
-WHERE
-	datediff( recordDate, last_date ) = 1 
-	AND Temperature > last_temperature;
+from
+	t 
+where
+	datediff( recordDate, prev_date ) = 1 
+	and Temperature > prev_temp;
 ```
 
 # LC1661. 每台机器的进程平均运行时间
 [传送门](https://leetcode.cn/problems/average-time-of-process-per-machine/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT
-	machine_id,
-	ROUND( SUM( CASE WHEN activity_type = 'end' THEN TIMESTAMP ELSE -TIMESTAMP END ) / count( DISTINCT process_id ), 3 ) AS processing_time 
-FROM
-	Activity 
-GROUP BY
-	machine_id
+select
+    machine_id,
+    round(sum(case when activity_type = 'end' then timestamp else -timestamp end) / count(distinct process_id), 3) as processing_time 
+from
+    Activity 
+group by
+    machine_id
 ```
 
 # LC577. 员工奖金
 [传送门](https://leetcode.cn/problems/employee-bonus/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT 
-	name
-	bonus 
-FROM
-	Employee e
-	LEFT JOIN Bonus b ON e.empId = b.empId 
-WHERE
-	bonus < 1000 
-	OR b.empId IS NULL;
+select
+    name,
+    bonus
+from
+    Employee e
+left join
+    Bonus b
+on
+    e.empId = b.empId 
+where
+    bonus < 1000 or b.empId is null
 ```
 
 # LC1280. 学生们参加各科测试的次数
 [传送门](https://leetcode.cn/problems/students-and-examinations/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT
-	stu.student_id,
-	stu.student_name,
-	sub.subject_name,
-	count( e.subject_name ) AS attended_exams 
-FROM
-	Students stu
-	CROSS JOIN Subjects sub
-	LEFT JOIN Examinations e ON stu.student_id = e.student_id 
-	AND sub.subject_name = e.subject_name 
-GROUP BY
-	stu.student_id,
-	sub.subject_name 
-ORDER BY
-	stu.student_id,
-	sub.subject_name;
+select
+    stu.student_id,
+    stu.student_name,
+    sub.subject_name,
+    coalesce(count(e.subject_name)) as attended_exams
+from
+    Students stu
+cross join
+    Subjects sub
+left join
+    Examinations e
+on
+    stu.student_id = e.student_id and sub.subject_name = e.subject_name
+group by
+    stu.student_id, stu.student_name, sub.subject_name
+order by
+    stu.student_id, sub.subject_name
 ```
 
 # LC 570. 至少有5名直接下属的经理
@@ -174,84 +176,165 @@ ORDER BY
 select
     m.name
 from
-    Employee m
+    Employee e
 join
-    Employee e on e.managerId = m.id
+    Employee m
+on
+    e.managerId = m.id
 group by
     e.managerId
-having 
-    count(e.id) >= 5
+having
+    count(*) >= 5
 ```
 
 
 # LC1934. 确认率
 [传送门](https://leetcode.cn/problems/confirmation-rate/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT
-	s.user_id,
-	round( ifnull( avg( c.action = 'confirmed' ), 0 ), 2 ) AS confirmation_rate 
-FROM
-	Signups s
-	LEFT JOIN Confirmations c ON s.user_id = c.user_id 
-GROUP BY
-	s.user_id;
+select
+    s.user_id,
+    round(coalesce(avg(action = 'confirmed'), 0), 2) as confirmation_rate 
+from
+    Signups s
+left join
+    Confirmations c
+on
+    s.user_id = c.user_id
+group by
+    s.user_id
 ```
+
+# LC620. 有趣的电影
+[传送门](https://leetcode.cn/problems/not-boring-movies/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+select 
+    * 
+from 
+    cinema 
+where 
+    description != 'boring' and mod(id, 2) = 1
+order by 
+    rating desc
+```
+
+# LC1251. 平均售价
+[传送门](https://leetcode.cn/problems/average-selling-price/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+select 
+    p.product_id,
+    round(coalesce(sum(price * units) / sum(units), 0), 2) as average_price 
+from 
+    Prices p 
+left join 
+    UnitsSold u
+on 
+    p.product_id = u.product_id
+where 
+    purchase_date between start_date and end_date or u.product_id is null
+group by 
+    p.product_id
+```
+
+# LC1075. 项目员工 I
+[传送门](https://leetcode.cn/problems/project-employees-i/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+select
+    project_id,
+    round(avg(experience_years), 2) as average_years
+from
+    Project p
+left join
+    Employee e
+on
+    p.employee_id = e.employee_id 
+group by
+    project_id
+```
+
+# LC1633. 各赛事的用户注册率
+[传送门](https://leetcode.cn/problems/percentage-of-users-attended-a-contest/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+select
+    contest_id,
+    round(count(user_id) / (select count(*) from Users) * 100, 2) as percentage 
+from    
+    Register r
+group by
+    contest_id 
+order by    
+    percentage desc, contest_id asc
+```
+
+# LC1211. 查询结果的质量和占比
+[传送门](https://leetcode.cn/problems/queries-quality-and-percentage/description/?envType=study-plan-v2&envId=sql-free-50)
+```SQL
+select
+    query_name,
+    round(avg(rating / position) , 2) as quality,
+    round(avg(rating < 3) * 100, 2) as poor_query_percentage 
+from
+    Queries 
+group by
+    query_name 
+having
+    query_name is not null
+```
+
 
 # LC1193. 每月交易 I
 [传送门](https://leetcode.cn/problems/monthly-transactions-i/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT
-	date_format( trans_date, '%Y-%m' ) AS month,
-	country,
-	count(*) AS trans_count,
-	sum( if(state = 'approved', 1, 0) ) as approved_count,
-	sum( amount ) AS trans_total_amount,
-	sum( if (state = 'approved', amount, 0) ) as approved_total_amount
-FROM
-	Transactions 
-GROUP BY
-	month,
-	country;
+select
+    date_format(trans_date, '%Y-%m') as month,
+    country,
+    count(*) as trans_count,
+    sum(if(state = 'approved', 1, 0)) as approved_count,
+    sum(amount) as trans_total_amount,
+    sum(if(state = 'approved', amount, 0)) as approved_total_amount
+from
+    Transactions
+group by
+    month, country
 ```
 
 # LC1174. 即时食物配送 II
 [传送门](https://leetcode.cn/problems/immediate-food-delivery-ii/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-with d as (
-    select 
+with t as (
+    select
         customer_id,
         order_date,
         customer_pref_delivery_date,
         rank() over (partition by customer_id order by order_date) as rk
-    from 
+    from
         Delivery
-) 
+)
 
 select
-    round(sum(if(d.order_date = d.customer_pref_delivery_date, 1, 0)) * 100 / count(d.customer_id), 2) AS immediate_percentage 
+    round(sum(if(order_date = customer_pref_delivery_date, 1, 0)) / count(customer_id) * 100, 2) as immediate_percentage
 from
-    d
+    t
 where
-    d.rk = 1
+    t.rk = 1
 ```
 
 # LC550. 游戏玩法分析 IV
 [传送门](https://leetcode.cn/problems/game-play-analysis-iv/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
 with t as (
-    select 
+    select
         player_id,
-        timestampdiff(DAY, 
-                        event_date, 
-                        lead(event_date, 1) over (partition by player_id order by event_date))
-        as day_diff,
+        timestampdiff(DAY,
+                        event_date,
+                        lead(event_date, 1) over (partition by player_id order by event_date)) as day_diff,
         rank() over (partition by player_id order by event_date) as rk
-    from Activity
+    from
+        Activity
 )
 
-select
-    round(sum(if(day_diff = 1, 1, 0 )) / count(player_id), 2) as fraction
-from 
+select 
+    round(sum(if(day_diff = 1, 1, 0)) / count(player_id), 2) as fraction
+from
     t
 where
     t.rk = 1
@@ -264,9 +347,9 @@ select
     teacher_id,
     count(distinct subject_id) as cnt
 from
-    Teacher
+    Teacher 
 group by
-    teacher_id;
+    teacher_id
 ```
 
 # LC1141. 查询近30天活跃用户数
