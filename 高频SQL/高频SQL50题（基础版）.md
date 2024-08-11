@@ -454,7 +454,7 @@ join
 on
     e.reports_to = m.employee_id
 group by
-    m.employee_id, m.name
+    m.employee_id
 order by    
     m.employee_id
 ```
