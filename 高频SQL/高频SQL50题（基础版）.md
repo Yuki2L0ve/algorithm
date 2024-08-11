@@ -464,9 +464,7 @@ order by
 ```SQL
 with t as (
     select
-      employee_id,
-      department_id,
-      primary_flag,
+      *,
       count(*) over (partition by employee_id) as cnt
     from Employee 
 )
