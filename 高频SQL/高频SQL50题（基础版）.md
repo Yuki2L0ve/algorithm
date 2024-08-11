@@ -369,29 +369,32 @@ group by
 # LC1084. 销售分析III
 [传送门](https://leetcode.cn/problems/sales-analysis-iii/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT
-	p.product_id,
-	p.product_name 
-FROM
-	Product p
-	LEFT JOIN Sales s ON p.product_id = s.product_id 
-GROUP BY
-	p.product_id 
-HAVING
-	sum( s.sale_date BETWEEN '2019-01-01' AND '2019-03-31' ) = count(*);
+select
+    p.product_id,
+    p.product_name
+from
+    Product p
+left join
+    Sales s
+on
+    p.product_id = s.product_id
+group by 
+    p.product_id 
+having
+    sum(s.sale_date between '2019-01-01' and '2019-03-31') = count(*)
 ```
 
 # LC596. 超过5名学生的课
 [传送门](https://leetcode.cn/problems/classes-more-than-5-students/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT
-	class 
-FROM
-	Courses 
-GROUP BY
-	class 
-HAVING
-	count( student ) >= 5;
+select
+    class
+from
+    Courses
+group by
+    class    
+having
+    count(student) >= 5
 ```
 
 # LC1729. 求关注者的数量
@@ -412,7 +415,7 @@ order by
 [传送门](https://leetcode.cn/problems/biggest-single-number/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
 with t as (
-    select num from MyNumbers group by num having count(num) = 1 
+    select num from MyNumbers group by num having count(num) = 1
 )
 
 select max(num) as num from t
@@ -440,12 +443,14 @@ select
     count(e.employee_id) as reports_count,
     round(avg(e.age)) as average_age 
 from
-    Employees m
+    Employees e
 join
-    Employees e on e.reports_to = m.employee_id
+    Employees m
+on
+    e.reports_to = m.employee_id
 group by
     m.employee_id, m.name
-order by
+order by    
     m.employee_id
 ```
 
@@ -467,7 +472,7 @@ select
 from
     t
 where
-    t.cnt = 1 or t.primary_flag = 'Y'
+    cnt = 1 or primary_flag = 'Y'
 ```
 
 # LC610. 判断三角形
@@ -528,41 +533,45 @@ with t as (
     select
         turn,
         person_name,
-        sum(weight) over (order by turn) as sum_weight
+        sum(weight) over (order by turn) as sum_weight 
     from
-        Queue
+        Queue 
 )
 
-select person_name from t
-where sum_weight <= 1000
-order by turn desc
+select
+    person_name
+from
+    t
+where
+    sum_weight <= 1000
+order by
+    turn desc
 limit 1
 ```
 
 # LC1907. 按分类统计薪水
 [传送门](https://leetcode.cn/problems/count-salary-categories/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-SELECT 
-    'Low Salary' AS category,
-    SUM(CASE WHEN income < 20000 THEN 1 ELSE 0 END) AS accounts_count
-FROM 
+select
+    'Low Salary' as category,       
+    sum(case when income < 20000 then 1 else 0 end) as accounts_count 
+from
+    Accounts 
+
+union
+
+select
+    'Average Salary' as category,
+    sum(case when income between 20000 and 50000 then 1 else 0 end) as accounts_count
+from
     Accounts
-    
-UNION
 
-SELECT  
-    'Average Salary' category,
-    SUM(CASE WHEN income >= 20000 AND income <= 50000 THEN 1 ELSE 0 END) 
-    AS accounts_count
-FROM 
-    Accounts
+union
 
-UNION
-
-SELECT 
-    'High Salary' category,
-    SUM(CASE WHEN income > 50000 THEN 1 ELSE 0 END) AS accounts_count
-FROM 
+select
+    'High Salary' as category,
+    sum(case when income > 50000 then 1 else 0 end) as accounts_count
+from
     Accounts
 ```
 
@@ -570,27 +579,27 @@ FROM
 [传送门](https://leetcode.cn/problems/employees-whose-manager-left-the-company/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
 select
-	employee_id 
+    employee_id
 from
-	Employees 
+    Employees 
 where
-	salary < 30000
-	and manager_id not in ( select employee_id from Employees ) 
+    salary < 30000 and
+    manager_id not in (select distinct employee_id from Employees)
 order by
-	employee_id;
+    employee_id
 ```
 
 # LC626. 换座位
 [传送门](https://leetcode.cn/problems/exchange-seats/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-select 
-    case when id % 2 = 1 and id = (select max(id) from seat) then id
-        when id % 2 = 1 then id + 1
-        else id - 1
-        end as id,
+select
+    case when mod(id, 2) = 1 and id = (select max(id) from Seat) then id
+        when mod(id, 2) = 1 then id + 1
+        else id - 1 end as id,
     student
-from seat
-order by id;
+from
+    Seat
+order by id
 ```
 
 # LC1341. 电影评分
@@ -600,10 +609,18 @@ order by id;
 with t as (
     -- 查询评论最多的用户名
     (
-        select name as results from Users u
-        join MovieRating mr on u.user_id = mr.user_id
-        group by u.user_id
-        order by count(distinct movie_id) desc, name asc
+        select
+            name as results      
+        from
+            Users u
+        join
+            MovieRating mr
+        on
+            u.user_id = mr.user_id
+        group by
+            u.user_id
+        order by 
+            count(distinct movie_id) desc, name asc
         limit 1
     )
 
@@ -611,11 +628,20 @@ with t as (
 
     -- 查询在 February 2020 平均评分最高的电影名称
     (
-        select title as results from Movies m
-        join MovieRating mr on m.movie_id = mr.movie_id
-        where year(created_at) = 2020 and month(created_at) = 2
-        group by m.movie_id
-        order by avg(rating) desc, title asc
+        select
+            title as results
+        from
+            Movies as m
+        join
+            MovieRating mr
+        on
+            m.movie_id = mr.movie_id
+        where
+            year(created_at) = 2020 and month(created_at) = 2
+        group by
+            m.movie_id
+        order by
+            avg(rating) desc, title asc
         limit 1
     )
 )
@@ -641,7 +667,9 @@ select
 from
     t
 where
-    datediff(visited_on, (select min(visited_on) from Customer)) >= 6;
+    datediff(visited_on, (select min(visited_on) from Customer)) >= 6
+order by
+    visited_on
 ```
 
 # LC602. 好友申请 II ：谁有最多的好友
