@@ -49,7 +49,12 @@ order by
 # LC1683. 无效的推文
 [传送门](https://leetcode.cn/problems/invalid-tweets/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-select tweet_id from Tweets where char_length(content) > 15
+select
+    tweet_id
+from
+    Tweets
+where
+    char_length(content) > 15
 ```
 
 # LC1378. 使用唯一标识码替换员工ID
@@ -714,20 +719,23 @@ where
 [传送门](https://leetcode.cn/problems/department-top-three-salaries/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
 with e as (
-    select 
+    select
         *,
         dense_rank() over (partition by departmentId order by salary desc) as rk
-    from Employee
+    from
+       Employee 
 )
 
 select
-    d.name AS Department,
-    e.name AS Employee,
-    e.salary AS Salary
+    d.name as Department,
+    e.name as Employee,
+    e.salary as Salary
 from
     e
-JOIN
-    Department d on e.departmentId = d.id
+join
+    Department d
+on
+    e.departmentId = d.id
 where
     e.rk <= 3
 ```
@@ -749,15 +757,23 @@ order by user_id
 # LC1527. 患某种疾病的患者
 [传送门](https://leetcode.cn/problems/patients-with-a-condition/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-select * from Patients
-where conditions regexp '^DIAB1|\\sDIAB1'
+select 
+    * 
+from 
+    Patients
+where
+    conditions regexp '^DIAB1|\\sDIAB1'
 ```
 
 # LC196. 删除重复的电子邮箱
 [传送门](https://leetcode.cn/problems/delete-duplicate-emails/description/?envType=study-plan-v2&envId=sql-free-50)
 ```SQL
-delete p1 from Person p1, Person p2
-where p1.email = p2.email and p1.id > p2.id
+delete 
+    p1
+from
+    Person p1, Person p2
+where
+    p1.email = p2.email and p1.id > p2.id
 ```
 
 # LC176. 第二高的薪水
