@@ -803,3 +803,189 @@ from
 where
     t.rk = 1
 ```
+
+# LC1285. 找到连续区间的开始和结束数字
+[传送门](https://leetcode.cn/problems/find-the-start-and-end-number-of-continuous-ranges/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select
+        log_id,
+        log_id + 1 - row_number() over (order by log_id) as diff
+    from
+        Logs
+)
+
+select
+    min(log_id) as start_id,
+    max(log_id) as end_id
+from
+    t
+group by
+    diff
+```
+
+# LC1596. 每位顾客最经常订购的商品
+[传送门](https://leetcode.cn/problems/the-most-frequently-ordered-products-for-each-customer/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select
+        customer_id,
+        product_id,
+        rank() over (partition by customer_id order by count(product_id) desc) as rk
+    from
+        Orders
+    group by
+        customer_id, product_id
+)
+
+select
+    t.customer_id,
+    t.product_id,
+    p.product_name
+from
+    t
+join
+    Products p
+on
+    t.product_id = p.product_id
+where 
+    t.rk = 1
+```
+
+# LC1709. 访问日期之间最大的空档期
+[传送门](https://leetcode.cn/problems/biggest-window-between-visits/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select
+        user_id,
+        visit_date,
+        coalesce(
+            datediff(lead(visit_date) over (partition by user_id order by visit_date), visit_date),
+            datediff('2021-1-1', visit_date)
+        ) as diff
+    from
+        UserVisits 
+)
+
+select
+    user_id,
+    max(diff) as biggest_window
+from
+    t
+group by
+    user_id
+order by
+    user_id
+```
+
+# LC1270. 向公司 CEO 汇报工作的所有人
+[传送门](https://leetcode.cn/problems/all-people-report-to-the-given-manager/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select employee_id from Employees where manager_id = 1
+    union all
+    select employee_id from Employees where manager_id in (
+        select employee_id from Employees where manager_id = 1
+    )
+    union all
+    select employee_id from Employees where manager_id in (
+        select employee_id from Employees where manager_id in (
+            select employee_id from Employees where manager_id = 1
+        )
+    )
+)
+
+
+select
+    distinct employee_id
+from
+    t
+where
+    employee_id != 1
+```
+
+# LC1412. 查找成绩处于中游的学生
+[传送门](https://leetcode.cn/problems/find-the-quiet-students-in-all-exams/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select
+        exam_id,
+        student_id,
+        score,
+        rank() over(partition by exam_id order by score desc) high_rk,
+        rank() over(partition by exam_id order by score) low_rk
+    from
+        Exam
+)
+
+select
+    t.student_id,
+    student_name
+from
+    t
+join
+    Student s
+on
+    t.student_id = s.student_id
+group by
+    t.student_id
+having
+    min(t.high_rk) != 1 and min(t.low_rk) != 1
+order by
+    t.student_id
+```
+
+# LC1767. 寻找没有被执行的任务对
+[传送门](https://leetcode.cn/problems/find-the-subtasks-that-did-not-execute/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with recursive t as (
+    select task_id, subtasks_count as sub_id from Tasks
+    union all
+    select task_id, sub_id - 1 from t where sub_id > 1
+)
+
+select
+    t.task_id,
+    t.sub_id as subtask_id
+from
+    t
+left join
+    Executed e
+on
+    t.task_id = e.task_id and t.sub_id = e.subtask_id
+where
+    e.subtask_id is null
+```
+
+# LC1225. 报告系统状态的连续日期
+[传送门](https://leetcode.cn/problems/report-contiguous-dates/description/)
+```SQL
+with CombinedDates as (
+    select 'failed' as type, fail_date as date from Failed
+    union all
+    select 'succeeded' as type, success_date as date from Succeeded
+),
+DatediffSeries as (
+    select
+        type,
+        date,
+        SUBDATE(date, ROW_NUMBER() over (partition by type order by date)) as diff
+    from 
+        CombinedDates
+    where 
+        date between '2019-01-01' and '2019-12-31'
+)
+
+
+select
+    type as period_state,
+    MIN(date) as start_date,
+    MAX(date) as end_date
+from 
+    DatediffSeries
+GROUP BY 
+    type, diff
+order by 
+    start_date;
+
+```
