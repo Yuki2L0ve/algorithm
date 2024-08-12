@@ -299,3 +299,327 @@ select
 from
     Delivery
 ```
+
+# LC1445. 苹果和桔子
+[传送门](https://leetcode.cn/problems/apples-oranges/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    sale_date,
+    sum(if(fruit = 'apples', sold_num, -sold_num)) as diff
+from
+    Sales
+group by
+    sale_date
+order by
+    sale_date
+```
+
+# LC1699. 两人之间的通话次数
+[传送门](https://leetcode.cn/problems/number-of-calls-between-two-persons/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    from_id as person1,
+    to_id as person2,
+    count(*) as call_count,
+    sum(duration) as total_duration
+from
+    calls
+group by
+    least(from_id, to_id), greatest(from_id, to_id)
+```
+
+# LC1587. 银行账户概要 II
+[传送门](https://leetcode.cn/problems/bank-account-summary-ii/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    name,
+    sum(amount) as balance
+from
+    Users u
+left join
+    Transactions t
+on
+    u.account = t.account
+group by
+    u.account
+having
+    sum(amount) > 10000
+```
+
+# LC182. 查找重复的电子邮箱
+[传送门](https://leetcode.cn/problems/duplicate-emails/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    email
+from
+    Person
+group by
+    email
+having
+    count(email) > 1
+```
+
+# LC1050. 合作过至少三次的演员和导演
+[传送门](https://leetcode.cn/problems/actors-and-directors-who-cooperated-at-least-three-times/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    actor_id, director_id
+from
+    ActorDirector 
+group by
+    actor_id, director_id
+having
+    count(*) >= 3
+```
+
+# LC1511. 消费者下单频率
+[传送门](https://leetcode.cn/problems/customer-order-frequency/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    c.customer_id,
+    c.name
+from
+    Customers c
+join
+    Orders o
+on
+    c.customer_id = o.customer_id
+join
+    Product p
+on
+    o.product_id = p.product_id
+group by
+    c.customer_id, c.name
+having
+    sum(if(left(o.order_date, 7) = '2020-06', p.price * o.quantity, 0)) >= 100
+    and
+    sum(if(left(o.order_date, 7) = '2020-07', p.price * o.quantity, 0)) >= 100
+```
+
+# LC1693. 每天的领导和合伙人
+[传送门](https://leetcode.cn/problems/daily-leads-and-partners/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    date_id,
+    make_name,
+    count(distinct lead_id) as unique_leads,
+    count(distinct partner_id) as unique_partners
+from
+    DailySales d
+group by
+    date_id, make_name
+```
+
+# LC1495. 上月播放的儿童适宜电影
+[传送门](https://leetcode.cn/problems/friendly-movies-streamed-last-month/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    distinct title
+from
+    TVProgram t
+left join
+    Content c
+on
+    t.content_id = c.content_id
+where
+    left(program_date, 7) = '2020-06' and Kids_content = 'Y'
+    and content_type = 'Movies'
+```
+
+# LC1501. 可以放心投资的国家
+[传送门](https://leetcode.cn/problems/countries-you-can-safely-invest-in/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with CountryAverage as (
+    select
+        c.name as country,
+        avg(ca.duration) as country_avg_duration
+    from
+        Person p
+    join
+        Country c
+    on
+        c.country_code = left(p.phone_number, 3)
+    join
+        Calls ca
+    on
+        p.id = ca.caller_id or p.id = ca.callee_id
+    group by
+        c.name
+),
+GlobalAverage as (
+    select
+        avg(duration) as global_avg_duration
+    from
+        Calls
+)
+
+select
+    ca.country
+from
+    CountryAverage ca, GlobalAverage ga
+where
+    ca.country_avg_duration > ga.global_avg_duration
+```
+
+# LC603. 连续空余座位
+[传送门](https://leetcode.cn/problems/consecutive-available-seats/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select
+        seat_id,
+        free,
+        lag(free) over (order by seat_id) as prev_free,
+        lead(free) over (order by seat_id) as next_free
+    from
+        Cinema
+)
+
+select
+    seat_id
+from
+    t
+where
+    free = 1 and (prev_free = 1 or next_free = 1)
+order by
+    seat_id
+```
+
+# LC1795. 每个产品在不同商店的价格
+[传送门](https://leetcode.cn/problems/rearrange-products-table/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select product_id, 'store1' as store, store1 as price
+from Products where store1 is not null
+
+union all
+
+select product_id, 'store2' as store, store2 as price
+from Products where store2 is not null
+
+union all
+
+select product_id, 'store3' as store, store3 as price
+from Products where store3 is not null
+```
+
+# LC613. 直线上的最近距离
+[传送门](https://leetcode.cn/problems/shortest-distance-in-a-line/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    min(abs(p1.x - p2.x)) as shortest
+from
+    Point p1
+join 
+    Point p2
+on
+    p1.x != p2.x
+```
+
+# LC1965. 丢失信息的雇员
+[传送门](https://leetcode.cn/problems/employees-with-missing-information/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select employee_id from Employees 
+    union all
+    select employee_id from Salaries
+) 
+
+select
+    employee_id
+from
+    t
+group by
+    employee_id
+having
+    count(*) = 1
+order by
+    employee_id
+```
+
+# LC1264. 页面推荐
+[传送门](https://leetcode.cn/problems/page-recommendations/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    distinct page_id as recommended_page
+from
+    Likes
+where
+    user_id in (
+        select user1_id as user_id from Friendship where user2_id = 1
+        union all
+        select user2_id as user_id from Friendship where user1_id = 1
+    )
+    and
+    page_id not in (
+        select page_id from Likes where user_id = 1
+    )
+```
+
+# LC608. 树节点
+[传送门](https://leetcode.cn/problems/tree-node/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    id,
+    case
+        when Tree.id = (select t.id from Tree t where t.p_id is null) then 'Root'
+        when Tree.id in (select t.p_id from Tree t) then 'Inner'
+        else 'Leaf'
+    end as type
+from
+    Tree
+order by
+    id
+```
+
+# LC534. 游戏玩法分析 III
+[传送门](https://leetcode.cn/problems/game-play-analysis-iii/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    player_id,
+    event_date,
+    sum(games_played) over (partition by player_id order by event_date) as games_played_so_far
+from
+    Activity
+```
+
+# LC1783. 大满贯数量
+[传送门](https://leetcode.cn/problems/grand-slam-titles/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select wimbledon as player_id from Championships
+    union all
+    select fr_open as player_id from Championships
+    union all 
+    select us_open as player_id from Championships
+    union all
+    select au_open as player_id from Championships
+)
+
+select
+    p.player_id,
+    p.player_name,
+    count(*) as grand_slams_count
+from
+    Players p
+join
+    t
+on
+    p.player_id = t.player_id
+group by
+    p.player_id
+```
+
+# LC1747. 应该被禁止的 Leetflex 账户
+[传送门](https://leetcode.cn/problems/leetflex-banned-accounts/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    distinct b.account_id
+from
+    LogInfo a
+join
+    LogInfo b
+on
+    a.account_id = b.account_id
+where
+    a.ip_address != b.ip_address and
+    b.login between a.login and a.logout
+```
