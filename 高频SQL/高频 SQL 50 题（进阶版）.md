@@ -623,3 +623,183 @@ where
     a.ip_address != b.ip_address and
     b.login between a.login and a.logout
 ```
+
+# LC1350. 院系无效的学生
+[传送门](https://leetcode.cn/problems/students-with-invalid-departments/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    id,
+    name
+from
+    Students 
+where
+    department_id not in (
+        select distinct id from Departments
+    )
+```
+
+# LC1303. 求团队人数
+[传送门](https://leetcode.cn/problems/find-the-team-size/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+select
+    employee_id,
+    count(*) over (partition by team_id) as team_size
+from
+    Employee
+```
+
+# LC512. 游戏玩法分析 II
+[传送门](https://leetcode.cn/problems/game-play-analysis-ii/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select
+        player_id,
+        device_id,
+        rank() over (partition by player_id order by event_date) as rk
+    from
+        Activity
+)
+
+select
+    player_id,
+    device_id
+from
+    t
+where
+    t.rk = 1
+```
+
+# LC184. 部门工资最高的员工
+[传送门](https://leetcode.cn/problems/department-highest-salary/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select
+        name,
+        salary,
+        departmentId,
+        dense_rank() over (partition by departmentId order by salary desc) as rk
+    from
+        Employee
+)
+
+select
+    d.name as Department,
+    t.name as Employee,
+    t.salary as Salary
+from
+    t
+left join
+    Department d
+on
+    t.departmentId = d.id
+where
+    t.rk = 1
+```
+
+# LC1549. 每件商品的最新订单
+[传送门](https://leetcode.cn/problems/the-most-recent-orders-for-each-product/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select
+       product_name,
+       p.product_id as product_id,
+       order_id,
+       order_date,
+       rank() over (partition by p.product_id order by order_date desc) as rk 
+    from
+        Orders o
+    left join
+        Products p
+    on
+        o.product_id = p.product_id
+)
+
+select  
+    product_name,
+    product_id,
+    order_id,
+    order_date
+from
+    t
+where
+    t.rk = 1
+order by
+    product_name, product_id, order_id
+```
+
+# LC1532. 最近的三笔订单
+[传送门](https://leetcode.cn/problems/the-most-recent-three-orders/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select
+        name as customer_name,
+        c.customer_id,
+        order_id,
+        order_date,
+        dense_rank() over (partition by c.customer_id order by order_date desc) as rk
+    from
+        Customers c
+    join
+        Orders o
+    on
+        c.customer_id = o.customer_id
+)
+
+select
+    customer_name,
+    customer_id,
+    order_id,
+    order_date
+from
+    t
+where
+    t.rk <= 3
+order by
+    customer_name, customer_id, order_date desc
+```
+
+# LC1831. 每天的最大交易
+[传送门](https://leetcode.cn/problems/maximum-transaction-each-day/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select
+        *,
+        rank() over (partition by day order by amount desc) as rk
+    from
+        Transactions    
+)
+
+select
+    transaction_id
+from
+    t
+where
+    t.rk = 1
+order by    
+    transaction_id
+```
+
+# LC1077. 项目员工 III
+[传送门](https://leetcode.cn/problems/project-employees-iii/description/?envType=study-plan-v2&envId=sql-premium-50)
+```SQL
+with t as (
+    select  
+       project_id,
+       e.employee_id,
+       rank() over (partition by project_id order by experience_years desc) as rk 
+    from
+       Project p
+    left join
+        Employee e
+    on
+        p.employee_id = e.employee_id 
+)
+
+select  
+    project_id,
+    employee_id
+from
+    t
+where
+    t.rk = 1
+```
