@@ -1,3 +1,8 @@
+这类题的特点：
++ 这n个球都必须全部分发到k个桶中，即必须都选上，不能不选
++ 每个球都只能用一次
+
+
 # LC473. 火柴拼正方形
 [传送门](https://leetcode.cn/problems/matchsticks-to-square/description/)
 ```C++
