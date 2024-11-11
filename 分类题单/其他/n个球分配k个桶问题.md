@@ -92,7 +92,7 @@ public:
 class Solution {
 public:
     vector<int> c;
-    int ans, n, k;
+    int target, n, k;
 
     void dfs(vector<int>& cur, int start) {
         if (start >= n) {
@@ -100,7 +100,7 @@ public:
             for (int i = 0; i < k; ++ i) {
                 t = max(t, cur[i]);
             }
-            ans = min(ans, t);
+            target = min(target, t);
             return ;
         }
 
@@ -109,12 +109,12 @@ public:
         if (zeros > n - start)  return ;
 
         for (int i = 0; i < k; ++ i)
-            if (cur[i] > ans)
+            if (cur[i] > target)
                 return ;
         
         for (int i = 0; i < k; ++ i) {
             if (i && cur[i] == cur[i - 1])   continue;
-            if (cur[i] + c[start] > ans)    continue;
+            if (cur[i] + c[start] > target)    continue;
             cur[i] += c[start];
             dfs(cur, start + 1);
             cur[i] -= c[start];
@@ -123,14 +123,14 @@ public:
 
     int distributeCookies(vector<int>& cookies, int k) {
         this->c = cookies;
-        this->k = k, this->n = c.size(), ans = INT_MAX;
+        this->k = k, this->n = c.size(), target = INT_MAX;
 
         sort(c.begin(), c.end(), greater<int>());
 
         vector<int> cur(k);
         dfs(cur, 0);
 
-        return ans;
+        return target;
     }
 };
 ```
