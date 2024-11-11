@@ -42,7 +42,7 @@ public:
 };
 ```
 
-LC698. 划分为k个相等的子集
+# LC698. 划分为k个相等的子集
 [传送门](https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/description/?envType=daily-question&envId=2024-08-25)
 ```C++
 class Solution {
